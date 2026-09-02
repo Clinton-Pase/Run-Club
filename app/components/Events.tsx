@@ -157,7 +157,7 @@ export default function Events() {
             <div className="grid gap-4 md:grid-cols-2">
               {selectedEvent.images.map((image, index) => (
                 <div
-                  key={image}
+                  key={index}
                   className={`relative overflow-hidden rounded-2xl ${
                     index === 0 ? "md:col-span-2 h-112.5" : "h-75"
                   }`}

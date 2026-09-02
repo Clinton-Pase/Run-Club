@@ -59,7 +59,7 @@ export default function About() {
         <div className="relative h-[450px] overflow-hidden rounded-3xl md:h-[600px]">
           {images.map((image, index) => (
             <Image
-              key={image.src}
+              key={index}
               src={image.src}
               alt={image.alt}
               fill
@@ -101,7 +101,7 @@ export default function About() {
           <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
             {images.map((image, index) => (
               <button
-                key={image.src}
+                key={index}
                 type="button"
                 onClick={() => setCurrentIndex(index)}
                 aria-label={`Go to image ${index + 1}`}

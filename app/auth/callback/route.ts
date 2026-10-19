@@ -23,6 +23,24 @@ export async function GET(request: NextRequest) {
     }
   }
 
+   const supabase = await createClient();
+
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      return NextResponse.redirect(new URL(next, url.origin));
+    }
+
+    console.error("Supabase callback error:", error.message);
+  } else {
+    console.error(
+      "Supabase callback received no code. OAuth error:",
+      url.searchParams.get("error"),
+      url.searchParams.get("error_description")
+    );
+  }
+
   return NextResponse.redirect(
     new URL("/login?error=authentication_failed", url.origin)
   );

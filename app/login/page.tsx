@@ -5,10 +5,14 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 type AuthFormProps = {
   mode: "login" | "signup";
 };
+import Navbar from "../components/Navbar";
+import Alx from "../components/assets/alxlogo.png";
+import Footer from "../components/Footer";
 
 export default function AuthForm({ mode }: AuthFormProps) {
   const supabase = createClient();
@@ -120,20 +124,26 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-12 text-white">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-7 shadow-2xl sm:p-9">
+    <main className="flex min-h-screen items-center justify-center overflow-hidden bg-[#0b2a53] px-4 py-32 text-white">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-gray-50 p-7 shadow-2xl sm:p-9">
+      <Navbar />
         <Link
           href="/"
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400"
+          className=""
         >
-          ALX Run Club
+            <Image
+            src={Alx}
+            alt="ALX Run Club"
+            className="h-10 w-auto  mx-auto"
+            priority
+          />
         </Link>
 
-        <h1 className="mt-8 text-3xl font-bold">
-          {isSignup ? "Join the club." : "Welcome back."}
+        <h1 className="mt-8 text-3xl text-[#031429] font-bold text-center">
+          {isSignup ? "Join the club" : "Welcome back"}
         </h1>
 
-        <p className="mt-2 text-sm text-zinc-400">
+        <p className="mt-2 text-sm text-[#031429] text-center">
           {isSignup
             ? "Create your account and get moving with us."
             : "Sign in to access your running community."}
@@ -144,7 +154,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             type="button"
             onClick={signInWithGoogle}
             disabled={loading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-semibold text-zinc-900 hover:bg-zinc-100 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#031429] px-4 py-3 font-semibold text-gray-50 hover:bg-zinc-950 disabled:opacity-60"
           >
             <span className="text-lg font-bold">G</span>
             Continue with Google
@@ -154,7 +164,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-white/10" />
-          <span className="text-xs uppercase text-zinc-500">
+          <span className="text-xs uppercase text-zinc-950">
             Or continue with email
           </span>
           <div className="h-px flex-1 bg-white/10" />
@@ -165,7 +175,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             <div>
               <label
                 htmlFor="fullName"
-                className="mb-1.5 block text-sm text-zinc-300"
+                className="mb-1.5 block text-sm text-[#031429]"
               >
                 Full name
               </label>
@@ -177,7 +187,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 maxLength={100}
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-zinc-950 px-4 py-3 outline-none focus:border-orange-400"
+                className="w-full rounded-lg border border-white/10 bg-[#031429] px-4 py-3 outline-none focus:border-orange-950"
                 placeholder="Your name"
               />
             </div>
@@ -186,7 +196,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <div>
             <label
               htmlFor="email"
-              className="mb-1.5 block text-sm text-zinc-300"
+              className="mb-1.5 block text-sm text-[#031429]"
             >
               Email address
             </label>
@@ -197,7 +207,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-zinc-950 px-4 py-3 outline-none focus:border-orange-400"
+              className="w-full rounded-lg border border-white/10 bg-[#031429] px-4 py-3 outline-none focus:border-orange-950"
               placeholder="you@example.com"
             />
           </div>
@@ -205,7 +215,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <div>
             <label
               htmlFor="password"
-              className="mb-1.5 block text-sm text-zinc-300"
+              className="mb-1.5 block text-sm text-[#031429]"
             >
               Password
             </label>
@@ -219,7 +229,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-zinc-950 px-4 py-3 outline-none focus:border-orange-400"
+              className="w-full rounded-lg border border-white/10 bg-[#031429] px-4 py-3 outline-none focus:border-orange-950"
               placeholder="At least 8 characters"
             />
           </div>
@@ -228,7 +238,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             <div className="text-right">
               <Link
                 href="/forgot-password"
-                className="text-sm text-orange-400 hover:underline"
+                className="text-sm text-zinc-950 hover:underline"
               >
                 Forgot password?
               </Link>
@@ -238,7 +248,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-orange-500 px-4 py-3 font-bold text-white hover:bg-orange-600 disabled:opacity-60"
+            className="w-full rounded-lg bg-zinc-950 px-4 py-3 font-bold text-white hover:bg-gray-600 disabled:opacity-60"
           >
             {loading
               ? "Please wait..."
@@ -258,11 +268,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
           </p>
         )}
 
-        <p className="mt-6 text-center text-sm text-zinc-400">
+        <p className="mt-6 text-center text-sm text-[#031429]">
           {isSignup ? "Already a member? " : "New to ALX Run Club? "}
           <Link
             href={isSignup ? "/login" : "/signup"}
-            className="font-semibold text-orange-400 hover:underline"
+            className="font-semibold text-zinc-900 hover:underline"
           >
             {isSignup ? "Log in" : "Create an account"}
           </Link>
@@ -270,11 +280,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
         <Link
           href="/"
-          className="mt-5 block text-center text-sm text-zinc-500 hover:text-white"
+          className="mt-5 block text-center text-sm text-[#031429] hover:text-gray-900"
         >
           ← Back to home
         </Link>
       </div>
+      
     </main>
+    
   );
 }

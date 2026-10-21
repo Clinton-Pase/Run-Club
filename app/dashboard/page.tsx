@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -7,19 +6,26 @@ export default async function DashboardPage() {
   const supabase = await createClient();
 
   const {
-    data: { claims },
-    error,
-  } = await supabase.auth.getClaims();
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-  if (error || !claims?.sub) {
+  if (userError || !user) {
     redirect("/login");
   }
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name, avatar_url, created_at")
-    .eq("id", claims.sub)
+    .eq("id", user.id)
     .maybeSingle();
+
+  const fullName =
+    profile?.full_name?.trim() ||
+    user.user_metadata?.full_name?.trim() ||
+    user.user_metadata?.name?.trim() ||
+    user.email?.split("@")[0] ||
+    "Runner";
 
   async function signOut() {
     "use server";
@@ -30,7 +36,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-5 py-10 text-white sm:px-10">
+    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
       <header className="mx-auto flex max-w-5xl items-center justify-between">
         <Link
           href="/"
@@ -41,7 +47,7 @@ export default async function DashboardPage() {
 
         <form action={signOut}>
           <button className="rounded-lg border border-white/15 px-4 py-2 text-sm hover:bg-white/5">
-            Sign out
+zs            Sign out
           </button>
         </form>
       </header>
@@ -52,7 +58,7 @@ export default async function DashboardPage() {
         </p>
 
         <h1 className="mt-3 text-4xl font-bold">
-          Welcome{profile?.full_name ? `, ${profile.full_name}` : ""}.
+          Welcome, {fullName}.
         </h1>
 
         <p className="mt-3 max-w-xl text-zinc-400">
@@ -78,7 +84,7 @@ export default async function DashboardPage() {
           <div className="rounded-2xl border border-white/10 bg-zinc-900 p-6">
             <h2 className="text-xl font-semibold">Your profile</h2>
             <p className="mt-2 text-sm text-zinc-400">
-              {claims.email ?? "Authenticated member"}
+              {user.email ?? "Authenticated member"}
             </p>
             <p className="mt-3 text-sm text-zinc-500">
               Member since{" "}

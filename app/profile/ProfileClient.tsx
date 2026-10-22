@@ -392,11 +392,11 @@ export default function ProfileClient({
               {activeTab === "security" && (
                 <div>
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-2xl text-[#031429] font-bold">
                       Security
                     </h2>
 
-                    <p className="mt-2 text-sm text-zinc-400">
+                    <p className="mt-2 text-sm text-[#031429]">
                       Keep your account secure by
                       regularly updating your password.
                     </p>
@@ -409,7 +409,7 @@ export default function ProfileClient({
                     <div>
                       <label
                         htmlFor="newPassword"
-                        className="mb-2 block text-sm font-medium"
+                        className="mb-2 block text-sm text-[#031429] font-medium"
                       >
                         New password
                       </label>
@@ -434,7 +434,7 @@ export default function ProfileClient({
                     <div>
                       <label
                         htmlFor="confirmPassword"
-                        className="mb-2 block text-sm font-medium"
+                        className="mb-2 block text-sm text-[#031429] font-medium"
                       >
                         Confirm new password
                       </label>
@@ -459,7 +459,7 @@ export default function ProfileClient({
                     <button
                       type="submit"
                       disabled={loading}
-                      className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600 disabled:opacity-60"
+                      className="rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60"
                     >
                       {loading
                         ? "Updating..."
@@ -468,11 +468,11 @@ export default function ProfileClient({
                   </form>
 
                   <div className="mt-10 border-t border-white/10 pt-6">
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-[#031429]">
                       Forgot your password?
                     </h3>
 
-                    <p className="mt-2 text-sm text-zinc-400">
+                    <p className="mt-2 text-sm text-[#031429]">
                       If you can't remember your
                       password, you can request a
                       recovery link.
@@ -480,7 +480,7 @@ export default function ProfileClient({
 
                     <Link
                       href="/forgot-password"
-                      className="mt-4 inline-block text-sm font-semibold text-orange-400 hover:underline"
+                      className="mt-4 inline-block text-sm font-semibold text-zinc-900 hover:underline"
                     >
                       Reset password →
                     </Link>
@@ -491,11 +491,11 @@ export default function ProfileClient({
               {activeTab === "preferences" && (
                 <div>
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-2xl text-[#031429] font-bold">
                       Preferences
                     </h2>
 
-                    <p className="mt-2 text-sm text-zinc-400">
+                    <p className="mt-2 text-sm text-[#031429]">
                       Choose what kind of club reminders
                       you'd like to receive.
                     </p>
@@ -517,7 +517,7 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-orange-500"
+                        className="h-5 w-5 accent-gray-50"
                       />
                     </div>
 
@@ -536,7 +536,7 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-orange-500"
+                        className="h-5 w-5 accent-gray-50"
                       />
                     </div>
 
@@ -555,12 +555,12 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-orange-500"
+                        className="h-5 w-5 accent-gray-50"
                       />
                     </div>
                   </div>
 
-                  <p className="mt-6 text-xs text-zinc-500">
+                  <p className="mt-6 text-xs text-[#031429]">
                     Notification preferences will be
                     connected to the club notification
                     system when that feature is added.
@@ -571,11 +571,11 @@ export default function ProfileClient({
               {activeTab === "account" && (
                 <div>
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-2xl text-[#031429] font-bold">
                       Account
                     </h2>
 
-                    <p className="mt-2 text-sm text-zinc-400">
+                    <p className="mt-2 text-sm text-[#031429]">
                       Information about your ALX Run
                       Club membership.
                     </p>
@@ -612,18 +612,18 @@ export default function ProfileClient({
                     </div>
                   </div>
 
-                  <div className="mt-8 border-t border-white/10 pt-8">
+                  <div className="mt-8 border-t text-[#031429] border-white/10 pt-8">
                     <h3 className="font-semibold">
                       Account actions
                     </h3>
 
-                    <p className="mt-2 text-sm text-zinc-400">
+                    <p className="mt-2 text-sm text-[#031429]">
                       Need to leave your account?
                     </p>
 
                     <Link
                       href="/dashboard"
-                      className="mt-4 inline-block rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold hover:bg-white/5"
+                      className="mt-4 inline-block rounded-xl border border-zinc/10 px-5 py-3 text-sm font-semibold hover:bg-white/5"
                     >
                       Return to dashboard
                     </Link>

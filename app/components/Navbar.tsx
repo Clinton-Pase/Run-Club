@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Alx from "./assets/alxlogo.png";
+import Link from "next/link";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -39,12 +40,12 @@ export default function Navbar() {
             </a>
           ))}
 
-          <a
-            href="#join"
+          <Link
+            href="/signup"
             className="rounded-full bg-black px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-105"
           >
-            Join Us
-          </a>
+            Sign Up
+          </Link>
         </div>
 
         {/* Mobile Toggle */}

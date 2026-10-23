@@ -25,16 +25,22 @@ export default function ProfileClient({
 }: ProfilePageProps) {
   const supabase = createClient();
 
-  const [activeTab, setActiveTab] = useState<Tab>("profile");
+  const [activeTab, setActiveTab] =
+    useState<Tab>("profile");
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [fullName, setFullName] = useState(
     profile.full_name ?? ""
   );
+
   const [avatarUrl, setAvatarUrl] = useState(
     profile.avatar_url ?? ""
   );
 
-  const [newPassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] =
+    useState("");
+
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
@@ -56,7 +62,9 @@ export default function ProfileClient({
       const trimmedAvatar = avatarUrl.trim();
 
       if (!trimmedName) {
-        throw new Error("Please enter your full name.");
+        throw new Error(
+          "Please enter your full name."
+        );
       }
 
       if (
@@ -79,7 +87,9 @@ export default function ProfileClient({
 
       if (error) throw error;
 
-      setMessage("Profile updated successfully.");
+      setMessage(
+        "Profile updated successfully."
+      );
     } catch (error) {
       setError(
         error instanceof Error
@@ -143,18 +153,27 @@ export default function ProfileClient({
     setError("");
   }
 
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   return (
-    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
+    <main className="min-h-screen bg-[#031429] px-4 py-6 text-white sm:px-10 sm:py-10">
       <div className="mx-auto max-w-5xl">
-        <header className="flex flex-wrap items-center justify-between gap-4">
+
+        {/* HEADER */}
+        <header className="relative flex items-center justify-between gap-4">
+
           <Link
             href="/dashboard"
             className="text-sm font-semibold text-gray-50 hover:underline"
+            onClick={closeMenu}
           >
-            ← Back to Dashboard
+            ← Dashboard
           </Link>
 
-          <nav className="flex flex-wrap items-center gap-4 text-sm">
+          {/* DESKTOP NAV */}
+          <nav className="hidden items-center gap-6 text-sm md:flex">
             <Link
               href="/dashboard"
               className="text-zinc-300 hover:text-gray-50"
@@ -190,32 +209,92 @@ export default function ProfileClient({
               Events
             </Link>
           </nav>
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+            type="button"
+            onClick={() =>
+              setMenuOpen((open) => !open)
+            }
+            className="rounded-lg border bg-white px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-red-800 hover:text-white md:hidden"
+            aria-expanded={menuOpen}
+            aria-label="Toggle navigation menu"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
+
+          {/* MOBILE NAV */}
+          {menuOpen && (
+            <div className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-2xl border border-white/10 bg-[#031429] shadow-2xl md:hidden">
+              <nav className="flex flex-col p-2">
+
+          
+                <Link
+                  href="/challenges"
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                >
+                  Challenges
+                </Link>
+
+                <Link
+                  href="/progress"
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                >
+                  My Progress
+                </Link>
+
+                <Link
+                  href="/achievements"
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                >
+                  Achievements
+                </Link>
+
+                <Link
+                  href="/events"
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                >
+                  Events
+                </Link>
+
+              </nav>
+            </div>
+          )}
         </header>
 
-        <section className="mt-10">
-          <div>
+        {/* PAGE HEADER */}
+        <section className="mt-8 sm:mt-10">
 
-            <h1 className="mt-2 text-4xl font-bold">
+          <div>
+            <h1 className="text-3xl font-bold sm:text-4xl">
               My Profile
             </h1>
 
-            <p className="mt-3 max-w-xl text-zinc-400">
-              Manage your member information, security,
-              preferences and account.
+            <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400 sm:text-base">
+              Manage your member information,
+              security, preferences and account.
             </p>
           </div>
 
-          <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-gray-50">
-            <div className="flex overflow-x-auto border-b border-white/10">
+          {/* PROFILE CARD */}
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-gray-50 sm:mt-10 sm:rounded-3xl">
+
+            {/* PROFILE TABS */}
+            <div className="grid grid-cols-2 border-b border-zinc-200 sm:flex">
+
               <button
                 type="button"
                 onClick={() =>
                   switchTab("profile")
                 }
-                className={`whitespace-nowrap px-6 py-4 text-[1rem] font-semibold ${
+                className={`px-4 py-4 text-sm font-semibold transition sm:flex-1 sm:px-6 ${
                   activeTab === "profile"
-                    ? "border-b-2 border-[#000] text-[#031429]"
-                    : "text-zinc-900 hover:text-zinc-900"
+                    ? "border-b-2 border-[#000] bg-white text-[#031429]"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Profile
@@ -226,10 +305,10 @@ export default function ProfileClient({
                 onClick={() =>
                   switchTab("security")
                 }
-                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold ${
+                className={`px-4 py-4 text-sm font-semibold transition sm:flex-1 sm:px-6 ${
                   activeTab === "security"
-                    ? "border-b-2 border-[#000] text-[#031429]"
-                    : "text-zinc-900 hover:text-zinc-900"
+                    ? "border-b-2 border-[#000] bg-white text-[#031429]"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Security
@@ -240,10 +319,10 @@ export default function ProfileClient({
                 onClick={() =>
                   switchTab("preferences")
                 }
-                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold ${
+                className={`border-t border-zinc-200 px-4 py-4 text-sm font-semibold transition sm:flex-1 sm:border-t-0 sm:px-6 ${
                   activeTab === "preferences"
-                    ? "border-b-2 border-[#000] text-[#031429]"
-                    : "text-zinc-900 hover:text-zinc-900"
+                    ? "border-b-2 border-[#000] bg-white text-[#031429]"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Preferences
@@ -254,17 +333,20 @@ export default function ProfileClient({
                 onClick={() =>
                   switchTab("account")
                 }
-                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold ${
+                className={`border-l border-t border-zinc-200 px-4 py-4 text-sm font-semibold transition sm:flex-1 sm:border-l-0 sm:border-t-0 sm:px-6 ${
                   activeTab === "account"
-                    ? "border-b-2 border-[#000] text-[#031429]"
-                    : "text-zinc-900 hover:text-zinc-900"
+                    ? "border-b-2 border-[#000] bg-white text-[#031429]"
+                    : "text-zinc-700 hover:bg-zinc-100"
                 }`}
               >
                 Account
               </button>
+
             </div>
 
-            <div className="p-6 sm:p-8">
+            {/* TAB CONTENT */}
+            <div className="p-5 sm:p-8">
+
               {message && (
                 <div className="mb-6 rounded-xl border border-green-500/20 bg-green-500/10 p-4 text-sm text-green-300">
                   {message}
@@ -277,28 +359,31 @@ export default function ProfileClient({
                 </div>
               )}
 
+              {/* PROFILE */}
               {activeTab === "profile" && (
                 <div>
+
                   <div className="mb-8">
-                    <h2 className="text-2xl text-[#031429] font-bold">
+                    <h2 className="text-xl font-bold text-[#031429] sm:text-2xl">
                       Personal information
                     </h2>
 
-                    <p className="mt-2 text-sm text-[#031429]">
+                    <p className="mt-2 text-sm leading-6 text-[#031429]">
                       Update the information other club
                       members can associate with you.
                     </p>
                   </div>
 
                   <div className="mb-8 flex items-center gap-4">
+
                     {avatarUrl ? (
                       <img
                         src={avatarUrl}
                         alt="Profile"
-                        className="h-16 w-16 rounded-full border border-white/10 object-cover"
+                        className="h-14 w-14 shrink-0 rounded-full border border-white/10 object-cover sm:h-16 sm:w-16"
                       />
                     ) : (
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#031429] text-xl font-bold text-white">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#031429] text-xl font-bold text-white sm:h-16 sm:w-16">
                         {(
                           fullName ||
                           user.email ||
@@ -309,26 +394,28 @@ export default function ProfileClient({
                       </div>
                     )}
 
-                    <div>
-                      <p className="font-semibold text-[#031429]">
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-[#031429]">
                         {fullName ||
                           "Your name"}
                       </p>
 
-                      <p className="text-sm text-[#031429]  ">
+                      <p className="truncate text-sm text-[#031429]">
                         {user.email}
                       </p>
                     </div>
+
                   </div>
 
                   <form
                     onSubmit={saveProfile}
                     className="max-w-2xl space-y-5"
                   >
+
                     <div>
                       <label
                         htmlFor="fullName"
-                        className="mb-2 block text-sm text-[#031429] font-medium"
+                        className="mb-2 block text-sm font-medium text-[#031429]"
                       >
                         Full name
                       </label>
@@ -352,7 +439,7 @@ export default function ProfileClient({
                     <div>
                       <label
                         htmlFor="avatarUrl"
-                        className="mb-2 block text-sm text-[#031429] font-medium"
+                        className="mb-2 block text-sm font-medium text-[#031429]"
                       >
                         Profile picture URL
                       </label>
@@ -379,24 +466,27 @@ export default function ProfileClient({
                     <button
                       type="submit"
                       disabled={loading}
-                      className="rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60"
+                      className="w-full rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60 sm:w-auto"
                     >
                       {loading
                         ? "Saving..."
                         : "Save changes"}
                     </button>
+
                   </form>
                 </div>
               )}
 
+              {/* SECURITY */}
               {activeTab === "security" && (
                 <div>
+
                   <div className="mb-8">
-                    <h2 className="text-2xl text-[#031429] font-bold">
+                    <h2 className="text-xl font-bold text-[#031429] sm:text-2xl">
                       Security
                     </h2>
 
-                    <p className="mt-2 text-sm text-[#031429]">
+                    <p className="mt-2 text-sm leading-6 text-[#031429]">
                       Keep your account secure by
                       regularly updating your password.
                     </p>
@@ -406,10 +496,11 @@ export default function ProfileClient({
                     onSubmit={changePassword}
                     className="max-w-2xl space-y-5"
                   >
+
                     <div>
                       <label
                         htmlFor="newPassword"
-                        className="mb-2 block text-sm text-[#031429] font-medium"
+                        className="mb-2 block text-sm font-medium text-[#031429]"
                       >
                         New password
                       </label>
@@ -434,7 +525,7 @@ export default function ProfileClient({
                     <div>
                       <label
                         htmlFor="confirmPassword"
-                        className="mb-2 block text-sm text-[#031429] font-medium"
+                        className="mb-2 block text-sm font-medium text-[#031429]"
                       >
                         Confirm new password
                       </label>
@@ -459,20 +550,22 @@ export default function ProfileClient({
                     <button
                       type="submit"
                       disabled={loading}
-                      className="rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60"
+                      className="w-full rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60 sm:w-auto"
                     >
                       {loading
                         ? "Updating..."
                         : "Update password"}
                     </button>
+
                   </form>
 
                   <div className="mt-10 border-t border-white/10 pt-6">
+
                     <h3 className="font-semibold text-[#031429]">
                       Forgot your password?
                     </h3>
 
-                    <p className="mt-2 text-sm text-[#031429]">
+                    <p className="mt-2 text-sm leading-6 text-[#031429]">
                       If you can't remember your
                       password, you can request a
                       recovery link.
@@ -484,25 +577,29 @@ export default function ProfileClient({
                     >
                       Reset password →
                     </Link>
+
                   </div>
                 </div>
               )}
 
+              {/* PREFERENCES */}
               {activeTab === "preferences" && (
                 <div>
+
                   <div className="mb-8">
-                    <h2 className="text-2xl text-[#031429] font-bold">
+                    <h2 className="text-xl font-bold text-[#031429] sm:text-2xl">
                       Preferences
                     </h2>
 
-                    <p className="mt-2 text-sm text-[#031429]">
+                    <p className="mt-2 text-sm leading-6 text-[#031429]">
                       Choose what kind of club reminders
                       you'd like to receive.
                     </p>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between gap-6 rounded-2xl bg-zinc-950 p-5">
+
+                    <div className="flex flex-col gap-4 rounded-2xl bg-zinc-950 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                       <div>
                         <h3 className="font-semibold">
                           Challenge reminders
@@ -517,11 +614,11 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-gray-50"
+                        className="h-5 w-5 shrink-0 self-start accent-gray-50 sm:self-auto"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between gap-6 rounded-2xl bg-zinc-950 p-5">
+                    <div className="flex flex-col gap-4 rounded-2xl bg-zinc-950 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                       <div>
                         <h3 className="font-semibold">
                           Event reminders
@@ -536,11 +633,11 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-gray-50"
+                        className="h-5 w-5 shrink-0 self-start accent-gray-50 sm:self-auto"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between gap-6 rounded-2xl bg-zinc-950 p-5">
+                    <div className="flex flex-col gap-4 rounded-2xl bg-zinc-950 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                       <div>
                         <h3 className="font-semibold">
                           Community notifications
@@ -555,39 +652,44 @@ export default function ProfileClient({
                       <input
                         type="checkbox"
                         defaultChecked
-                        className="h-5 w-5 accent-gray-50"
+                        className="h-5 w-5 shrink-0 self-start accent-gray-50 sm:self-auto"
                       />
                     </div>
+
                   </div>
 
-                  <p className="mt-6 text-xs text-[#031429]">
+                  <p className="mt-6 text-xs leading-5 text-[#031429]">
                     Notification preferences will be
                     connected to the club notification
                     system when that feature is added.
                   </p>
+
                 </div>
               )}
 
+              {/* ACCOUNT */}
               {activeTab === "account" && (
                 <div>
+
                   <div className="mb-8">
-                    <h2 className="text-2xl text-[#031429] font-bold">
+                    <h2 className="text-xl font-bold text-[#031429] sm:text-2xl">
                       Account
                     </h2>
 
-                    <p className="mt-2 text-sm text-[#031429]">
+                    <p className="mt-2 text-sm leading-6 text-[#031429]">
                       Information about your ALX Run
                       Club membership.
                     </p>
                   </div>
 
                   <div className="space-y-4">
+
                     <div className="rounded-2xl bg-zinc-950 p-5">
                       <p className="text-xs uppercase tracking-wider text-zinc-500">
                         Email address
                       </p>
 
-                      <p className="mt-2 font-semibold">
+                      <p className="mt-2 break-all font-semibold">
                         {user.email}
                       </p>
                     </div>
@@ -610,9 +712,11 @@ export default function ProfileClient({
                         )}
                       </p>
                     </div>
+
                   </div>
 
-                  <div className="mt-8 border-t text-[#031429] border-white/10 pt-8">
+                  <div className="mt-8 border-t border-white/10 pt-8 text-[#031429]">
+
                     <h3 className="font-semibold">
                       Account actions
                     </h3>
@@ -623,13 +727,15 @@ export default function ProfileClient({
 
                     <Link
                       href="/dashboard"
-                      className="mt-4 inline-block rounded-xl border border-zinc/10 px-5 py-3 text-sm font-semibold hover:bg-white/5"
+                      className="mt-4 inline-block rounded-xl border border-zinc-200 px-5 py-3 text-sm font-semibold hover:bg-zinc-100"
                     >
                       Return to dashboard
                     </Link>
+
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </section>

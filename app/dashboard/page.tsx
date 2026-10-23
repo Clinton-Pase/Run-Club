@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import Alx from "../components/assets/alxlogo.png";
 import Image from "next/image";
 
+
 export default async function DashboardPage() {
   const supabase = await createClient();
 
@@ -186,7 +187,8 @@ export default async function DashboardPage() {
             </h2>
 
             <p className="mt-2 text-sm text-[#031429]">
-              See your running activity and challenge progress in one place.
+             Track your active challenges, see how far you've come,
+and record your latest run.
             </p>
 
             <span className="mt-5 inline-block font-semibold text-[#031429]">
@@ -211,7 +213,11 @@ export default async function DashboardPage() {
             </span>
           </Link>
         </div>
+      
       </section>
+
+
+
     </main>
   );
 }

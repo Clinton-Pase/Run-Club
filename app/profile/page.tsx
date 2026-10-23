@@ -37,7 +37,7 @@ export default async function ProfilePage() {
           </p>
           <a
             href="/dashboard"
-            className="mt-6 inline-block rounded-xl bg-orange-50 px-5 py-3 font-semibold"
+            className="mt-6 inline-block rounded-xl bg-orange-500 px-5 py-3 font-semibold"
           >
             Return to Dashboard
           </a>

@@ -27,25 +27,22 @@ export default async function ChallengesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-5 py-10 text-white sm:px-10">
+    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
       <div className="mx-auto max-w-6xl">
         <header>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-orange-400 hover:underline"
+            className="text-sm font-semibold text-gray-50 hover:underline"
           >
             ← Dashboard
           </Link>
 
-          <p className="mt-10 text-sm font-semibold uppercase tracking-widest text-orange-400">
-            ALX Run Club
-          </p>
 
-          <h1 className="mt-3 text-4xl font-bold">
+          <h1 className="mt-5 text-4xl font-bold">
             Challenges
           </h1>
 
-          <p className="mt-3 max-w-2xl text-zinc-400">
+          <p className="mt-3 max-w-2xl text-gray-50">
             Push yourself, stay consistent, and run with the
             community. Choose a challenge and start making
             progress.
@@ -54,12 +51,12 @@ export default async function ChallengesPage() {
 
         <section className="mt-12">
           {challenges?.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
+            <div className="rounded-2xl border border-white/10 bg-gray-50 p-8">
               <h2 className="text-xl font-semibold">
                 No active challenges yet
               </h2>
 
-              <p className="mt-2 text-sm text-zinc-400">
+              <p className="mt-2 text-sm text-gray-50">
                 New challenges will appear here when the club
                 opens them.
               </p>
@@ -69,38 +66,38 @@ export default async function ChallengesPage() {
               {challenges?.map((challenge) => (
                 <article
                   key={challenge.id}
-                  className="flex flex-col rounded-2xl border border-white/10 bg-zinc-900 p-6"
+                  className="flex flex-col rounded-2xl border border-white/10 bg-gray-50 p-6"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <span className="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold capitalize text-orange-400">
+                    <span className="rounded-full bg-zinc-900 px-3 py-1 text-xs font-semibold capitalize text-gray-50">
                       {challenge.challenge_type.replace(
                         "_",
                         " "
                       )}
                     </span>
 
-                    <span className="text-xs capitalize text-zinc-500">
+                    <span className="text-xs capitalize text-[#031429]">
                       {challenge.status}
                     </span>
                   </div>
 
-                  <h2 className="mt-5 text-2xl font-bold">
+                  <h2 className="mt-5 text-2xl text-[#031429] font-bold">
                     {challenge.name}
                   </h2>
 
-                  <p className="mt-3 flex-1 text-sm leading-6 text-zinc-400">
+                  <p className="mt-3 flex-1 text-sm leading-6 text-[#031429]">
                     {challenge.description}
                   </p>
 
                   {challenge.target_value && (
                     <div className="mt-6 rounded-xl bg-zinc-950 p-4">
-                      <p className="text-xs uppercase tracking-wider text-zinc-500">
+                      <p className="text-xs uppercase tracking-wider text-zinc-50">
                         Target
                       </p>
 
                       <p className="mt-1 text-2xl font-bold">
                         {challenge.target_value}{" "}
-                        <span className="text-sm font-medium text-zinc-400">
+                        <span className="text-sm font-medium text-zinc-50">
                           {challenge.target_unit}
                         </span>
                       </p>
@@ -109,11 +106,11 @@ export default async function ChallengesPage() {
 
                   <div className="mt-5 flex justify-between text-sm">
                     <div>
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs font-medium text-[#031429]">
                         Starts
                       </p>
 
-                      <p className="mt-1">
+                      <p className="mt-1 font-medium text-[#031429]">
                         {new Date(
                           challenge.start_date
                         ).toLocaleDateString("en-NG")}
@@ -121,11 +118,11 @@ export default async function ChallengesPage() {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs font-medium text-[#031429]">
                         Ends
                       </p>
 
-                      <p className="mt-1">
+                      <p className="mt-1 font-medium text-[#031429]">
                         {new Date(
                           challenge.end_date
                         ).toLocaleDateString("en-NG")}
@@ -135,7 +132,7 @@ export default async function ChallengesPage() {
 
                   <Link
                     href={`/challenges/${challenge.id}`}
-                    className="mt-6 rounded-lg bg-white px-4 py-3 text-center text-sm font-bold text-zinc-950 hover:bg-zinc-200"
+                    className="mt-6 rounded-lg bg-zinc-900 px-4 py-3 text-center text-sm font-bold text-zinc-50 hover:bg-red-800"
                   >
                     View challenge
                   </Link>

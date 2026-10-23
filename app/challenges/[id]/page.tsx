@@ -1,6 +1,9 @@
+
+
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import ChallengeNavigation from "@/app/components/ChallengeNavigation";
 
 type ChallengePageProps = {
     params: Promise<{
@@ -12,6 +15,8 @@ export default async function ChallengePage({
     params,
 }: ChallengePageProps) {
     const { id } = await params;
+
+
 
     const supabase = await createClient();
 
@@ -83,53 +88,49 @@ export default async function ChallengePage({
             : 0;
 
     return (
-        <main className="min-h-screen bg-zinc-950 px-5 py-10 text-white sm:px-10">
+        <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
             <div className="mx-auto max-w-4xl">
-                <Link
-                    href="/challenges"
-                    className="text-sm font-semibold text-orange-400 hover:underline"
-                >
-                    ← Back to challenges
-                </Link>
 
-                <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-900 p-7 sm:p-10">
+    <ChallengeNavigation />
+
+                <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-50 p-7 sm:p-10">
                     <div className="flex flex-wrap items-center justify-between gap-4">
-                        <span className="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold capitalize text-orange-400">
+                        <span className="rounded-full bg-zinc-900 px-3 py-2 text-xs font-semibold capitalize text-orange-50">
                             {challenge.challenge_type.replace(
                                 "_",
                                 " "
                             )}
                         </span>
 
-                        <span className="text-sm capitalize text-zinc-500">
+                        <span className="text-sm capitalize text-[#031429]">
                             {challenge.status}
                         </span>
                     </div>
 
-                    <h1 className="mt-6 text-4xl font-bold">
+                    <h1 className="mt-6 text-4xl text-[#031429] font-bold">
                         {challenge.name}
                     </h1>
 
-                    <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-400">
+                    <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-900">
                         {challenge.description}
                     </p>
 
                     <div className="mt-8 grid gap-4 sm:grid-cols-3">
                         <div className="rounded-2xl bg-zinc-950 p-5">
-                            <p className="text-xs uppercase tracking-wider text-zinc-500">
+                            <p className="text-xs uppercase tracking-wider text-red-700">
                                 Target
                             </p>
 
                             <p className="mt-2 text-2xl font-bold">
                                 {challenge.target_value ?? "—"}{" "}
-                                <span className="text-sm font-medium text-zinc-400">
+                                <span className="text-sm font-medium text-zinc-50">
                                     {challenge.target_unit ?? ""}
                                 </span>
                             </p>
                         </div>
 
                         <div className="rounded-2xl bg-zinc-950 p-5">
-                            <p className="text-xs uppercase tracking-wider text-zinc-500">
+                            <p className="text-xs uppercase tracking-wider text-red-700">
                                 Starts
                             </p>
 
@@ -141,7 +142,7 @@ export default async function ChallengePage({
                         </div>
 
                         <div className="rounded-2xl bg-zinc-950 p-5">
-                            <p className="text-xs uppercase tracking-wider text-zinc-500">
+                            <p className="text-xs uppercase tracking-wider text-red-700">
                                 Ends
                             </p>
 
@@ -154,61 +155,62 @@ export default async function ChallengePage({
                     </div>
 
                     {participation ? (
-                        <div className="mt-8 rounded-2xl border border-orange-500/20 bg-orange-500/5 p-6">
-                                    <p className="text-sm font-semibold text-orange-400">
-                                        You are in this challenge
-                                    </p>
+                        <div className="mt-8 rounded-2xl border border-zinc-500/60 bg-red-700 p-6">
+                            <p className="text-sm font-semibold text-orange-50">
+                                You are in this challenge
+                            </p>
+
+                            <p className="mt-2 text-sm text-zinc-50">
+                                You joined on{" "}
+                                {new Date(participation.joined_at).toLocaleDateString("en-NG")}.
+                            </p>
+
+                            {supportsDistance ? (
+                                <div className="mt-6">
+                                    <div className="flex items-center justify-between gap-4 text-sm">
+                                        <span className="text-zinc-50">Your progress</span>
+                                        <span className="font-semibold text-zinc-50">
+                                            {totalDistance.toFixed(2)} km / {target} km
+                                        </span>
+                                    </div>
+
+                                    <div
+                                        className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-800"
+                                        role="progressbar"
+                                        aria-label="Challenge progress"
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                        aria-valuenow={Math.round(progressPercentage)}
+                                    >
+                                        <div
+                                            className="h-full rounded-full bg-orange-500 transition-all"
+                                            style={{ width: `${progressPercentage}%` }}
+                                        />
+                                    </div>
 
                                     <p className="mt-2 text-sm text-zinc-400">
-                                        You joined on{" "}
-                                        {new Date(participation.joined_at).toLocaleDateString("en-NG")}.
+                                        {progressPercentage.toFixed(0)}% of your target
                                     </p>
 
-                                    {supportsDistance ? (
-                                        <div className="mt-6">
-                                            <div className="flex items-center justify-between gap-4 text-sm">
-                                                <span className="text-zinc-400">Your progress</span>
-                                                <span className="font-semibold">
-                                                    {totalDistance.toFixed(2)} km / {target} km
-                                                </span>
-                                            </div>
-
-                                            <div
-                                                className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-800"
-                                                role="progressbar"
-                                                aria-label="Challenge progress"
-                                                aria-valuemin={0}
-                                                aria-valuemax={100}
-                                                aria-valuenow={Math.round(progressPercentage)}
-                                            >
-                                                <div
-                                                    className="h-full rounded-full bg-orange-500 transition-all"
-                                                    style={{ width: `${progressPercentage}%` }}
-                                                />
-                                            </div>
-
-                                            <p className="mt-2 text-sm text-zinc-400">
-                                                {progressPercentage.toFixed(0)}% of your target
-                                            </p>
-
-                                            <Link
-                                                href={`/challenges/${challenge.id}/log`}
-                                                className="mt-6 block w-full rounded-xl bg-orange-500 px-5 py-4 text-center font-bold text-white hover:bg-orange-600"
-                                            >
-                                                Log Activity
-                                            </Link>
-                                        </div>
-                                    ) : (
-                                        <p className="mt-4 text-sm text-zinc-400">
-                                            Activity tracking for this challenge type is coming next.
-                                        </p>
+                                    {challenge.status === "active" && (
+                                        <Link href={`/challenges/${challenge.id}/log`}
+                                            className="mt-6 block w-full rounded-xl bg-orange-500 px-5 py-4 text-center font-bold text-white hover:bg-orange-600"
+                                        >
+                                            Log Activity
+                                        </Link>
                                     )}
+                                </div>
+                            ) : (
+                                <p className="mt-4 text-sm text-zinc-50">
+                                    Activity tracking for this challenge type is coming next.
+                                </p>
+                            )}
 
-                                    {participation.completed_at && (
-                                        <p className="mt-4 text-sm font-semibold text-green-400">
-                                            Challenge completed 🎉
-                                        </p>
-                                       )}
+                            {participation.completed_at && (
+                                <p className="mt-4 text-sm font-semibold text-green-400">
+                                    Challenge completed 🎉
+                                </p>
+                            )}
                         </div>
                     ) : (
                         <form
@@ -261,13 +263,13 @@ export default async function ChallengePage({
                     )}
 
                     <div className="mt-8 border-t border-white/10 pt-8">
-                        <h2 className="text-xl font-bold">
+                        <h2 className="text-xl text-[#031429] font-bold">
                             Challenge rules
                         </h2>
 
-                        <p className="mt-3 text-sm leading-6 text-zinc-400">
+                        <p className="mt-3 text-sm leading-6 text-[#031429] font-semibold">
                             Your ranking is calculated using{" "}
-                            <span className="text-white">
+                            <span className="text-[#031429] font-semibold">
                                 {challenge.scoring_method.replace(
                                     "_",
                                     " "

@@ -60,9 +60,11 @@ export default async function ChallengePage({
         unit === "kilometer" ||
         unit === "kilometers";
 
-    let totalDistance = 0;
+let totalDistance = 0;
+let totalRunDays = 0;
 
-    if (participation && supportsDistance) {
+if (participation) {
+    if (supportsDistance) {
         const { data: activities, error: activitiesError } =
             await supabase
                 .from("challenge_activities")
@@ -74,19 +76,45 @@ export default async function ChallengePage({
             console.error("Activity lookup error:", activitiesError);
         } else {
             totalDistance = (activities ?? []).reduce(
-                (total, activity) => total + Number(activity.distance_km),
+                (total, activity) =>
+                    total + Number(activity.distance_km),
                 0
             );
         }
     }
 
-    const target = Number(challenge.target_value ?? 0);
+    if (challenge.scoring_method === "run_days") {
+        const { data: activities, error: activitiesError } =
+            await supabase
+                .from("challenge_activities")
+                .select("activity_date")
+                .eq("challenge_id", challenge.id)
+                .eq("user_id", claims.sub);
 
-    const progressPercentage =
-        target > 0
-            ? Math.min((totalDistance / target) * 100, 100)
-            : 0;
+        if (activitiesError) {
+            console.error("Run days lookup error:", activitiesError);
+        } else {
+            const uniqueRunDays = new Set(
+                (activities ?? []).map(
+                    (activity) => activity.activity_date
+                )
+            );
 
+            totalRunDays = uniqueRunDays.size;
+        }
+    }
+}
+   const target = Number(challenge.target_value ?? 0);
+
+const currentProgress =
+    challenge.scoring_method === "run_days"
+        ? totalRunDays
+        : totalDistance;
+
+const progressPercentage =
+    target > 0
+        ? Math.min((currentProgress / target) * 100, 100)
+        : 0;
     return (
         <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
             <div className="mx-auto max-w-4xl">
@@ -169,9 +197,11 @@ export default async function ChallengePage({
                                 <div className="mt-6">
                                     <div className="flex items-center justify-between gap-4 text-sm">
                                         <span className="text-zinc-50">Your progress</span>
-                                        <span className="font-semibold text-zinc-50">
-                                            {totalDistance.toFixed(2)} km / {target} km
-                                        </span>
+                                <span className="font-semibold text-zinc-50">
+    {challenge.scoring_method === "run_days"
+        ? `${totalRunDays} run days / ${target} run days`
+        : `${totalDistance.toFixed(2)} km / ${target} km`}
+</span>
                                     </div>
 
                                     <div

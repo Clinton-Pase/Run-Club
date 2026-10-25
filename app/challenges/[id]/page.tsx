@@ -83,6 +83,25 @@ if (participation) {
         }
     }
 
+    let totalRunDays = 0;
+
+if (participation && challenge.scoring_method === "run_days") {
+    const { data: activities, error: activitiesError } =
+        await supabase
+            .from("challenge_activities")
+            .select("activity_date")
+            .eq("challenge_id", challenge.id)
+            .eq("user_id", claims.sub);
+
+    if (activitiesError) {
+        console.error("Run days lookup error:", activitiesError);
+    } else {
+        totalRunDays = new Set(
+            (activities ?? []).map((activity) => activity.activity_date)
+        ).size;
+    }
+}
+
     if (challenge.scoring_method === "run_days") {
         const { data: activities, error: activitiesError } =
             await supabase
@@ -106,14 +125,14 @@ if (participation) {
 }
    const target = Number(challenge.target_value ?? 0);
 
-const currentProgress =
+const progressValue =
     challenge.scoring_method === "run_days"
         ? totalRunDays
         : totalDistance;
 
 const progressPercentage =
     target > 0
-        ? Math.min((currentProgress / target) * 100, 100)
+        ? Math.min((progressValue / target) * 100, 100)
         : 0;
     return (
         <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
@@ -193,14 +212,14 @@ const progressPercentage =
                                 {new Date(participation.joined_at).toLocaleDateString("en-NG")}.
                             </p>
 
-                            {supportsDistance ? (
+                     {supportsDistance || challenge.scoring_method === "run_days" ? (
                                 <div className="mt-6">
                                     <div className="flex items-center justify-between gap-4 text-sm">
                                         <span className="text-zinc-50">Your progress</span>
                                 <span className="font-semibold text-zinc-50">
     {challenge.scoring_method === "run_days"
-        ? `${totalRunDays} run days / ${target} run days`
-        : `${totalDistance.toFixed(2)} km / ${target} km`}
+    ? `${totalRunDays} run days / ${target} run days`
+    : `${totalDistance.toFixed(2)} km / ${target} km`}
 </span>
                                     </div>
 

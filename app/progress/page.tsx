@@ -1,7 +1,7 @@
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server"; 
 
 type Challenge = {
   id: string;
@@ -326,7 +326,8 @@ export default async function ProgressPage() {
                         View Challenge
                       </Link>
 
-                      {distanceChallenge && challenge.status === "active" && (
+                     {(distanceChallenge || challenge.challenge_type === "consistency") &&
+  challenge.status === "active" && (
                         <Link
                           href={`/challenges/${challenge.id}/log`}
                           className="rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-[#031429] transition hover:bg-cyan-300"

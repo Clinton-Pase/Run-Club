@@ -29,7 +29,7 @@ export default async function LogActivityPage({
     await supabase
       .from("challenges")
       .select(
-        "id, name, challenge_type, target_unit, start_date, end_date, status"
+      "id, target_unit, scoring_method, start_date, end_date, status"
       )
       .eq("id", id)
       .maybeSingle();
@@ -58,10 +58,15 @@ export default async function LogActivityPage({
   if (!participation) {
     redirect(`/challenges/${challenge.id}`);
   }
+const unit = (challenge.target_unit ?? "").trim().toLowerCase();
 
-  const unit = (challenge.target_unit ?? "").trim().toLowerCase();
-  const supportsDistance =
-    unit === "km" || unit === "kilometer" || unit === "kilometers";
+const supportsDistance =
+  unit === "km" ||
+  unit === "kilometer" ||
+  unit === "kilometers";
+
+const isRunDaysChallenge =
+  challenge.scoring_method === "run_days";
 
   async function logActivity(formData: FormData) {
     "use server";
@@ -101,7 +106,7 @@ export default async function LogActivityPage({
     const { data: currentChallenge, error: currentChallengeError } =
       await supabase
         .from("challenges")
-        .select("id, target_unit, start_date, end_date, status")
+        .select("id, name, challenge_type, target_unit, scoring_method, start_date, end_date, status")
         .eq("id", id)
         .maybeSingle();
 
@@ -109,23 +114,29 @@ export default async function LogActivityPage({
       throw new Error("Challenge not found.");
     }
 
-    const currentUnit = (
-      currentChallenge.target_unit ?? ""
-    ).trim().toLowerCase();
+  const currentUnit = (
+  currentChallenge.target_unit ?? ""
+).trim().toLowerCase();
 
-    if (
-      !["km", "kilometer", "kilometers"].includes(currentUnit)
-    ) {
-      throw new Error(
-        "Distance logging is not supported for this challenge."
-      );
-    }
+const supportsDistance =
+  currentUnit === "km" ||
+  currentUnit === "kilometer" ||
+  currentUnit === "kilometers";
 
-    if (
-      activityDate < currentChallenge.start_date ||
-      activityDate > currentChallenge.end_date ||
-      currentChallenge.status === "completed"
-    ) {
+const isRunDaysChallenge =
+  currentChallenge.scoring_method === "run_days";
+
+if (!supportsDistance && !isRunDaysChallenge) {
+  throw new Error(
+    "Activity logging is not supported for this challenge."
+  );
+}
+
+   if (
+  currentChallenge.status !== "active" ||
+  activityDate < currentChallenge.start_date ||
+  activityDate > currentChallenge.end_date
+) {
       throw new Error(
         "The activity date must fall within an active challenge period."
       );
@@ -183,12 +194,11 @@ export default async function LogActivityPage({
             {challenge.name}
           </h1>
 
-          {supportsDistance ? (
+          {supportsDistance || isRunDaysChallenge ? (
             <>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">
-                Record the distance you covered. Your saved activities
-                will contribute to your challenge progress.
-              </p>
+            {isRunDaysChallenge
+  ? "Record your run. Each unique running day counts toward your challenge progress."
+  : "Record the distance you covered. Your saved activities will contribute to your challenge progress."}
 
               <form action={logActivity} className="mt-8 space-y-6">
                 <div>

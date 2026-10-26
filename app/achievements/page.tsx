@@ -77,22 +77,22 @@ export default async function AchievementsPage() {
         </header>
 
         <section className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-            <p className="text-sm text-slate-400">
+          <div className="rounded-2xl border border-zinc/10 bg-white p-6">
+            <p className="text-sm text-[#031429]">
               Challenges completed
             </p>
 
-            <p className="mt-3 text-4xl font-bold text-cyan-400">
+            <p className="mt-3 text-4xl font-bold text-green-400">
               {completedChallenges.length}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-            <p className="text-sm text-slate-400">
+          <div className="rounded-2xl border border-zinc/10 bg-white p-6">
+            <p className="text-sm text-[#031429]">
               Badges earned
             </p>
 
-            <p className="mt-3 text-4xl font-bold">
+            <p className="mt-3 text-4xl font-bold text-green-400">
               {
                 completedChallenges.filter(
                   (challenge) => challenge.badge_name
@@ -101,16 +101,16 @@ export default async function AchievementsPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-            <p className="text-sm text-slate-400">
+          <div className="rounded-2xl border border-zinc/10 bg-white p-6">
+            <p className="text-sm text-[#031429]">
               Next goal
             </p>
 
-            <p className="mt-3 text-lg font-bold">
+            <p className="mt-3 text-lg text-[#031429] font-bold">
               Keep running
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-[#031429]">
               Complete more challenges to earn recognition.
             </p>
           </div>
@@ -122,29 +122,29 @@ export default async function AchievementsPage() {
               Your Achievements
             </h2>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-white">
               Challenges you have successfully completed.
             </p>
           </div>
 
           {completedChallenges.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.03] px-6 py-12 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.05] text-3xl">
+            <div className="rounded-2xl border border-dashed border-red/55 bg-white px-6 py-12 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500 text-3xl">
                 🏆
               </div>
 
-              <h3 className="mt-5 text-lg font-semibold">
+              <h3 className="mt-5 text-lg font-semibold text-[#031429] sm:text-xl">
                 Your first achievement is waiting
               </h3>
 
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#031429]">
                 Complete a challenge to earn your first badge and see it
                 appear here.
               </p>
 
               <Link
                 href="/challenges"
-                className="mt-6 inline-flex rounded-xl bg-cyan-400 px-5 py-3 font-semibold text-[#031429] transition hover:bg-cyan-300"
+                className="mt-6 inline-flex rounded-xl bg-zinc-950 px-5 py-3 font-semibold text-white transition hover:bg-red-800"
               >
                 Browse Challenges
               </Link>

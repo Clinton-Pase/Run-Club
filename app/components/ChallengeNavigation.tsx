@@ -16,13 +16,16 @@ export default function ChallengeNavigation() {
         className="text-sm font-semibold text-gray-50 hover:underline"
         onClick={closeMenu}
       >
-        ← Challenges
+        ← Back
       </Link>
 
       {/* DESKTOP NAV */}
       <nav className="hidden items-center gap-6 text-sm md:flex">
         <Link href="/dashboard" className="text-zinc-300 hover:text-white">
           Dashboard
+        </Link>
+           <Link href="/profile" className="text-zinc-300 hover:text-white">
+        Profile
         </Link>
         <Link href="/challenges" className="text-zinc-300 hover:text-white">
           Challenges
@@ -54,7 +57,7 @@ export default function ChallengeNavigation() {
         <div className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-2xl border border-white/10 bg-[#031429] shadow-2xl md:hidden">
           <nav className="flex flex-col p-2">
             {[
-           
+                 { href: "/profile", label: "Profile" },
               { href: "/challenges", label: "Challenges" },
               { href: "/progress", label: "My Progress" },
               { href: "/achievements", label: "Achievements" },

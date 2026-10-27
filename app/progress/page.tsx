@@ -381,7 +381,7 @@ const progress = distanceChallenge
                     <div className="mt-6 flex flex-wrap gap-3">
                       <Link
                         href={`/challenges/${challenge.id}`}
-                        className="rounded-xl border bg-[#031429] border-white/5 px-4 py-2.5 text-sm font-semibold transition hover:bg-zinc-900"
+                        className="rounded-xl border bg-[#031429] border-white/5 px-4 py-2.5 text-sm font-semibold transition hover:bg-red-800"
                       >
                         View Challenge
                       </Link>
@@ -390,7 +390,7 @@ const progress = distanceChallenge
   challenge.status === "active" && (
                         <Link
                           href={`/challenges/${challenge.id}/log`}
-                          className="rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#031429]"
+                          className="rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800"
                         >
                           Log Activity
                         </Link>

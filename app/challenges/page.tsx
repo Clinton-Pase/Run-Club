@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import ChallengeNavigation from "@/app/components/ChallengeNavigation";
 
 export default async function ChallengesPage() {
   const supabase = await createClient();
@@ -30,12 +31,8 @@ export default async function ChallengesPage() {
     <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
       <div className="mx-auto max-w-6xl">
         <header>
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-gray-50 hover:underline"
-          >
-            ← Dashboard
-          </Link>
+          <ChallengeNavigation />
+          
 
 
           <h1 className="mt-5 text-4xl font-bold">

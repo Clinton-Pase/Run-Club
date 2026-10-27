@@ -4,6 +4,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import ChallengeNavigation from "@/app/components/ChallengeNavigation";
 
 type Tab = "profile" | "security" | "preferences" | "account";
 
@@ -161,110 +162,7 @@ export default function ProfileClient({
     <main className="min-h-screen bg-[#031429] px-4 py-6 text-white sm:px-10 sm:py-10">
       <div className="mx-auto max-w-5xl">
 
-        {/* HEADER */}
-        <header className="relative flex items-center justify-between gap-4">
-
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-gray-50 hover:underline"
-            onClick={closeMenu}
-          >
-            ← Dashboard
-          </Link>
-
-          {/* DESKTOP NAV */}
-          <nav className="hidden items-center gap-6 text-sm md:flex">
-            <Link
-              href="/dashboard"
-              className="text-zinc-300 hover:text-gray-50"
-            >
-              Dashboard
-            </Link>
-
-            <Link
-              href="/challenges"
-              className="text-zinc-300 hover:text-gray-50"
-            >
-              Challenges
-            </Link>
-
-            <Link
-              href="/progress"
-              className="text-zinc-300 hover:text-gray-50"
-            >
-              My Progress
-            </Link>
-
-            <Link
-              href="/achievements"
-              className="text-zinc-300 hover:text-gray-50"
-            >
-              Achievements
-            </Link>
-
-            <Link
-              href="/events"
-              className="text-zinc-300 hover:text-gray-50"
-            >
-              Events
-            </Link>
-          </nav>
-
-          {/* MOBILE MENU BUTTON */}
-          <button
-            type="button"
-            onClick={() =>
-              setMenuOpen((open) => !open)
-            }
-            className="rounded-lg border bg-white px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-red-800 hover:text-white md:hidden"
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation menu"
-          >
-            {menuOpen ? "Close" : "Menu"}
-          </button>
-
-          {/* MOBILE NAV */}
-          {menuOpen && (
-            <div className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-2xl border border-white/10 bg-[#031429] shadow-2xl md:hidden">
-              <nav className="flex flex-col p-2">
-
-          
-                <Link
-                  href="/challenges"
-                  onClick={closeMenu}
-                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-                >
-                  Challenges
-                </Link>
-
-                <Link
-                  href="/progress"
-                  onClick={closeMenu}
-                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-                >
-                  My Progress
-                </Link>
-
-                <Link
-                  href="/achievements"
-                  onClick={closeMenu}
-                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-                >
-                  Achievements
-                </Link>
-
-                <Link
-                  href="/events"
-                  onClick={closeMenu}
-                  className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-                >
-                  Events
-                </Link>
-
-              </nav>
-            </div>
-          )}
-        </header>
+       <ChallengeNavigation/>
 
         {/* PAGE HEADER */}
         <section className="mt-8 sm:mt-10">
@@ -274,7 +172,7 @@ export default function ProfileClient({
               My Profile
             </h1>
 
-            <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400 sm:text-base">
+            <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-50 sm:text-base">
               Manage your member information,
               security, preferences and account.
             </p>
@@ -466,7 +364,7 @@ export default function ProfileClient({
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-zinc-950 disabled:opacity-60 sm:w-auto"
+                      className="w-full rounded-xl bg-[#031429] px-5 py-3 font-semibold text-white hover:bg-red-800 disabled:opacity-60 sm:w-auto"
                     >
                       {loading
                         ? "Saving..."

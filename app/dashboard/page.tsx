@@ -57,42 +57,49 @@ export default async function DashboardPage() {
         <nav className="hidden items-center gap-6 md:flex">
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             Dashboard
           </Link>
 
           <Link
             href="/challenges"
-            className="text-sm font-semibold text-white hover:text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             Challenges
           </Link>
 
           <Link
             href="/progress"
-            className="text-sm font-semibold text-white hover:text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             My Progress
           </Link>
 
           <Link
+            href="/leaderboard"
+            className="text-sm font-semibold text-white hover:text-green-400"
+          >
+            Leaderboard
+          </Link> 
+
+          <Link
             href="/achievements"
-            className="text-sm font-semibold text-white hover:text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             Achievements
           </Link>
 
           <Link
             href="/events"
-            className="text-sm font-semibold text-white hover:text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             Events
           </Link>
 
           <Link
             href="/profile"
-            className="text-sm font-semibold text-white hover:text-orange-400"
+            className="text-sm font-semibold text-white hover:text-green-400"
           >
             Profile
           </Link>
@@ -187,12 +194,29 @@ export default async function DashboardPage() {
             </h2>
 
             <p className="mt-2 text-sm text-[#031429]">
-             Track your active challenges, see how far you've come,
-and record your latest run.
+              Track your active challenges, see how far you've come,
+              and record your latest run.
             </p>
 
             <span className="mt-5 inline-block font-semibold text-[#031429]">
               View progress →
+            </span>
+          </Link>
+
+          <Link
+            href="/leaderboard"
+            className="rounded-2xl border border-white/10 bg-gray-50 p-6 transition hover:-translate-y-1"
+          >
+            <h2 className="text-xl font-semibold text-[#031429]">
+              Leaderboard
+            </h2>
+
+            <p className="mt-2 text-sm text-[#031429]">
+              See how you rank against other runners and track the community's progress.
+            </p>
+
+            <span className="mt-5 inline-block font-semibold text-[#031429]">
+              View leaderboard →
             </span>
           </Link>
 
@@ -212,8 +236,9 @@ and record your latest run.
               View achievements →
             </span>
           </Link>
+
         </div>
-      
+
       </section>
 
 

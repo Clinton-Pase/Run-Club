@@ -21,22 +21,25 @@ export default function ChallengeNavigation() {
 
       {/* DESKTOP NAV */}
       <nav className="hidden items-center gap-6 text-sm md:flex">
-        <Link href="/dashboard" className="text-zinc-300 hover:text-white">
+        <Link href="/dashboard" className="text-zinc-300 hover:text-green-400">
           Dashboard
         </Link>
-           <Link href="/profile" className="text-zinc-300 hover:text-white">
+           <Link href="/profile" className="text-zinc-300 hover:text-green-400">
         Profile
         </Link>
-        <Link href="/challenges" className="text-zinc-300 hover:text-white">
+        <Link href="/challenges" className="text-zinc-300 hover:text-green-400">
           Challenges
         </Link>
-        <Link href="/progress" className="text-zinc-300 hover:text-white">
+        <Link href="/progress" className="text-zinc-300 hover:text-green-400">
           My Progress
+        </Link> 
+         <Link href="/leaderboard" className="text-zinc-300 hover:text-green-400">
+          Leaderboard
         </Link>
-        <Link href="/achievements" className="text-zinc-300 hover:text-white">
+        <Link href="/achievements" className="text-zinc-300 hover:text-green-400">
           Achievements
         </Link>
-        <Link href="/events" className="text-zinc-300 hover:text-white">
+        <Link href="/events" className="text-zinc-300 hover:text-green-400">
           Events
         </Link>
       </nav>
@@ -60,6 +63,7 @@ export default function ChallengeNavigation() {
                  { href: "/profile", label: "Profile" },
               { href: "/challenges", label: "Challenges" },
               { href: "/progress", label: "My Progress" },
+              { href: "/leaderboard", label: "Leaderboard" },
               { href: "/achievements", label: "Achievements" },
               { href: "/events", label: "Events" },
             ].map((item) => (
@@ -67,7 +71,7 @@ export default function ChallengeNavigation() {
                 key={item.href}
                 href={item.href}
                 onClick={closeMenu}
-                className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                className="rounded-xl px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-green-400"
               >
                 {item.label}
               </Link>

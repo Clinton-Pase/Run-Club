@@ -232,7 +232,7 @@ const progressPercentage =
                                         aria-valuenow={Math.round(progressPercentage)}
                                     >
                                         <div
-                                            className="h-full rounded-full bg-orange-500 transition-all"
+                                            className="h-full rounded-full bg-[#031429] transition-all"
                                             style={{ width: `${progressPercentage}%` }}
                                         />
                                     </div>
@@ -243,7 +243,7 @@ const progressPercentage =
 
                                     {challenge.status === "active" && (
                                         <Link href={`/challenges/${challenge.id}/log`}
-                                            className="mt-6 block w-full rounded-xl bg-orange-500 px-5 py-4 text-center font-bold text-white hover:bg-orange-600"
+                                            className="mt-6 block w-full rounded-xl bg-green-500 px-5 py-4 text-center font-bold text-white hover:bg-zinc-900"
                                         >
                                             Log Activity
                                         </Link>

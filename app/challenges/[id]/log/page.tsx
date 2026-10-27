@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import ChallengeNavigation from "@/app/components/ChallengeNavigation";
 
 type LogActivityPageProps = {
   params: Promise<{
@@ -176,35 +177,31 @@ if (!supportsDistance && !isRunDaysChallenge) {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-5 py-10 text-white sm:px-10">
+    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
       <div className="mx-auto max-w-2xl">
-        <Link
-          href={`/challenges/${challenge.id}`}
-          className="text-sm font-semibold text-orange-400 hover:underline"
-        >
-          ← Back to challenge
-        </Link>
-
-        <section className="mt-8 rounded-3xl border border-white/10 bg-zinc-900 p-7 sm:p-10">
-          <p className="text-sm font-semibold text-orange-400">
+       <ChallengeNavigation />
+        <section className="mt-8 rounded-3xl border border-white/10 bg-zinc-50 p-7 sm:p-10">
+          <p className="text-lg font-semibold text-[#031429]">
             Log your activity
           </p>
 
-          <h1 className="mt-3 text-3xl font-bold">
+          <h1 className="mt-3 text-3xl text-[#031429] font-bold">
             {challenge.name}
           </h1>
 
           {supportsDistance || isRunDaysChallenge ? (
             <>
-            {isRunDaysChallenge
-  ? "Record your run. Each unique running day counts toward your challenge progress."
-  : "Record the distance you covered. Your saved activities will contribute to your challenge progress."}
+              <p className="mt-2 text-sm text-[#031429]">
+                {isRunDaysChallenge
+                  ? "Record your run. Each unique running day counts toward your challenge progress."
+                  : "Record the distance you covered. Your saved activities will contribute to your challenge progress."}
+              </p>
 
               <form action={logActivity} className="mt-8 space-y-6">
                 <div>
                   <label
                     htmlFor="distance_km"
-                    className="mb-2 block text-sm font-medium text-zinc-300"
+                    className="mb-2 block text-sm font-medium text-[#031429]"
                   >
                     Distance covered (km)
                   </label>
@@ -217,7 +214,7 @@ if (!supportsDistance && !isRunDaysChallenge) {
                     max="300"
                     step="0.01"
                     required
-                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-orange-500"
+                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-zinc-50 outline-none focus:border-red-800"
                     placeholder="e.g. 5.5"
                   />
                 </div>
@@ -225,7 +222,7 @@ if (!supportsDistance && !isRunDaysChallenge) {
                 <div>
                   <label
                     htmlFor="activity_date"
-                    className="mb-2 block text-sm font-medium text-zinc-300"
+                    className="mb-2 block text-sm font-medium text-[#031429]"
                   >
                     Activity date
                   </label>
@@ -238,14 +235,14 @@ if (!supportsDistance && !isRunDaysChallenge) {
                     max={challenge.end_date}
                     required
                     defaultValue={new Date().toLocaleDateString("en-CA")}
-                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-orange-500"
+                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-zinc-300 outline-none focus:border-red-800"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="note"
-                    className="mb-2 block text-sm font-medium text-zinc-300"
+                    className="mb-2 block text-sm font-medium text-[#031429]"
                   >
                     Note (optional)
                   </label>
@@ -255,14 +252,14 @@ if (!supportsDistance && !isRunDaysChallenge) {
                     name="note"
                     rows={3}
                     maxLength={500}
-                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-orange-500"
+                    className="w-full rounded-xl border border-white/10 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-red-800"
                     placeholder="How did your run go?"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-orange-500 px-5 py-4 font-bold text-white hover:bg-orange-600"
+                  className="w-full rounded-xl bg-[#031429] px-5 py-4 font-bold text-white hover:bg-red-700"
                 >
                   Save activity
                 </button>

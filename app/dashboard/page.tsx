@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Alx from "../components/assets/alxlogo.png";
 import Image from "next/image";
+import RunClubMarquee from "../components/RunClubMarquee";
 
 
 export default async function DashboardPage() {
@@ -40,7 +41,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
+   <main className="relative min-h-screen bg-[#031429] px-5 py-10 pb-34 text-white sm:px-10">
       <header className="mx-auto flex max-w-5xl items-center justify-between">
         <Link
           href="/"
@@ -90,13 +91,12 @@ export default async function DashboardPage() {
             Achievements
           </Link>
 
-          <Link
-            href="/events"
-            className="text-sm font-semibold text-white hover:text-green-400"
-          >
-            Events
-          </Link>
-
+         <Link
+  href="https://alx.ng/calendar"
+  className="text-sm font-semibold text-white hover:text-green-400"
+>
+  Events
+</Link>
           <Link
             href="/profile"
             className="text-sm font-semibold text-white hover:text-green-400"
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
             </p>
 
             <Link
-              href="/events"
+                href="https://alx.ng/calendar"
               className="mt-5 inline-block font-semibold text-[#031429] hover:text-zinc-950"
             >
               Explore club events →
@@ -241,6 +241,9 @@ export default async function DashboardPage() {
 
       </section>
 
+      <div className="absolute bottom-0 left-0 w-full min-w-0">
+        <RunClubMarquee />
+      </div>
 
 
     </main>

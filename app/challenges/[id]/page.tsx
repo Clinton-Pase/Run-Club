@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChallengeNavigation from "@/app/components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";   
+
 
 type ChallengePageProps = {
     params: Promise<{
@@ -135,7 +137,7 @@ const progressPercentage =
         ? Math.min((progressValue / target) * 100, 100)
         : 0;
     return (
-        <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
+      <main className="relative min-h-screen bg-[#031429] px-5 py-10 pb-34 text-white sm:px-10">
             <div className="mx-auto max-w-4xl">
 
     <ChallengeNavigation />
@@ -347,6 +349,12 @@ const progressPercentage =
                     </div>
                 </section>
             </div>
+
+      <div className="absolute bottom-0 left-0 w-full min-w-0">
+        <RunClubMarquee />
+      </div>
+
+
         </main>
     );
 }

@@ -1,9 +1,10 @@
-
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import ChallengeNavigation from "@/app/components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";
+
 
 type LogActivityPageProps = {
   params: Promise<{
@@ -30,7 +31,7 @@ export default async function LogActivityPage({
     await supabase
       .from("challenges")
       .select(
-      "id, target_unit, scoring_method, start_date, end_date, status"
+      "id, name, target_unit, scoring_method, start_date, end_date, status"
       )
       .eq("id", id)
       .maybeSingle();
@@ -177,7 +178,7 @@ if (!supportsDistance && !isRunDaysChallenge) {
   }
 
   return (
-    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
+    <main className="relative min-h-screen bg-[#031429] px-5 py-10 pb-34 text-white sm:px-10">
       <div className="mx-auto max-w-2xl">
        <ChallengeNavigation />
         <section className="mt-8 rounded-3xl border border-white/10 bg-zinc-50 p-7 sm:p-10">
@@ -279,6 +280,10 @@ if (!supportsDistance && !isRunDaysChallenge) {
             </div>
           )}
         </section>
+      </div>
+
+      <div className="absolute bottom-0 left-0 w-full min-w-0">
+        <RunClubMarquee />
       </div>
     </main>
   );

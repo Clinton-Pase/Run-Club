@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChallengeNavigation from "@/app/components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";
+
 
 export default async function ChallengesPage() {
   const supabase = await createClient();
@@ -28,7 +30,7 @@ export default async function ChallengesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#031429] px-5 py-10 text-white sm:px-10">
+     <main className="relative min-h-screen bg-[#031429] px-5 py-10 pb-34 text-white sm:px-10">
       <div className="mx-auto max-w-6xl">
         <header>
           <ChallengeNavigation />
@@ -139,6 +141,10 @@ export default async function ChallengesPage() {
           )}
         </section>
       </div>
+
+            <div className="absolute bottom-0 left-0 w-full min-w-0">
+              <RunClubMarquee />
+            </div>
     </main>
   );
 }

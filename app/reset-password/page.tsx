@@ -44,12 +44,12 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-white">
+    <main className="flex min-h-screen items-center justify-center bg-[#031429] px-4 text-white">
       <form
         onSubmit={submit}
-        className="w-full max-w-md space-y-5 rounded-2xl border border-white/10 bg-zinc-900 p-8"
+        className="w-full max-w-md space-y-5 rounded-2xl border border-zinc/10 bg-white p-8"
       >
-        <h1 className="text-2xl font-bold">Choose a new password</h1>
+        <h1 className="text-2xl text-[#031429] font-bold">Choose a new password</h1>
 
         <label className="block text-sm">
           New password
@@ -66,12 +66,12 @@ export default function ResetPasswordPage() {
 
         <button
           disabled={loading}
-          className="w-full rounded-lg bg-orange-500 p-3 font-semibold disabled:opacity-60"
+          className="w-full rounded-lg bg-zinc-950 p-3 font-semibold disabled:opacity-60  hover:bg-red-800"
         >
           {loading ? "Updating..." : "Update password"}
         </button>
 
-        {message && <p role="status" className="text-sm">{message}</p>}
+        {message && <p role="status" className="text-sm text-[#031429]">{message}</p>}
       </form>
     </main>
   );

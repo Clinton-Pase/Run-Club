@@ -6,12 +6,14 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 
+
 type AuthFormProps = {
   mode: "login" | "signup";
 };
 
 import Navbar from "../components/Navbar";
 import Alx from "../components/assets/alxlogo.png";
+import RunClubMarquee from "./RunClubMarquee";
 
 export default function AuthForm({ mode }: AuthFormProps) {
   const supabase = createClient();
@@ -228,7 +230,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center overflow-hidden bg-[#0b2a53] px-4 py-32 text-white">
+   <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#031429] px-4 py-32 text-white">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-gray-50 p-7 shadow-2xl sm:p-9">
         <Navbar />
 
@@ -440,6 +442,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
           ← Back to home
         </Link>
       </div>
+
+            <div className="absolute bottom-0 left-0 w-full min-w-0">
+        <RunClubMarquee />
+      </div>
+
     </main>
+    
   );
 }

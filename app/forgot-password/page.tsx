@@ -37,13 +37,13 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-white">
+    <main className="flex min-h-screen items-center justify-center bg-[#031419] px-4 text-white">
       <form
         onSubmit={submit}
-        className="w-full max-w-md space-y-5 rounded-2xl border border-white/10 bg-zinc-900 p-8"
+        className="w-full max-w-md space-y-5 rounded-2xl border border-white/10 bg-white p-8"
       >
-        <h1 className="text-2xl font-bold">Reset your password</h1>
-        <p className="text-sm text-zinc-400">
+        <h1 className="text-2xl font-bold text-[#031429]">Reset your password</h1>
+        <p className="text-sm text-[#031429]">
           Enter your email and we&apos;ll send you a recovery link.
         </p>
 
@@ -61,14 +61,14 @@ export default function ForgotPasswordPage() {
 
         <button
           disabled={loading}
-          className="w-full rounded-lg bg-orange-500 p-3 font-semibold disabled:opacity-60"
+          className="w-full rounded-lg bg-zinc-950 p-3 font-semibold disabled:opacity-60 hover:bg-red-800"
         >
           {loading ? "Sending..." : "Send reset link"}
         </button>
 
         {message && <p role="status" className="text-sm">{message}</p>}
 
-        <Link href="/login" className="block text-sm text-orange-400">
+        <Link href="/login" className="block text-sm text-[#031429]">
           Back to login
         </Link>
       </form>

@@ -5,6 +5,7 @@ import Stat from "./components/Stat";
 import About from "./components/About";
 import Events from "./components/Events";
 import Footer from "./components/Footer";
+import RunClubMarquee from "./components/RunClubMarquee";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
     <About />
     <Events />
     <Footer />
+    <RunClubMarquee />
     </main>
     </div>
   );

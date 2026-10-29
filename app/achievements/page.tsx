@@ -5,6 +5,7 @@ import ChallengeNavigation from "@/app/components/ChallengeNavigation";
 
 type Achievement = {
   id: string;
+  challenge_id: string;
   name: string;
   description: string | null;
   badge_name: string | null;
@@ -15,10 +16,9 @@ type Achievement = {
 export default async function AchievementsPage() {
   const supabase = await createClient();
 
-  const {
-    data: { claims },
-    error: authError,
-  } = await supabase.auth.getClaims();
+  const { data: authData, error: authError } =
+    await supabase.auth.getClaims();
+  const claims = authData?.claims;
 
   if (authError || !claims?.sub) {
     redirect("/login");
@@ -49,16 +49,26 @@ export default async function AchievementsPage() {
     console.error("Error loading achievements:", error.message);
   }
 
-  const completedChallenges = (achievements ?? [])
-    .filter((item) => item.challenge)
-    .map((item) => ({
-      id: item.id,
-      name: item.challenge.name,
-      description: item.challenge.description,
-      badge_name: item.challenge.badge_name,
-      badge_description: item.challenge.badge_description,
-      completed_at: item.completed_at,
-    }));
+  const completedChallenges: Achievement[] = (achievements ?? [])
+    .map((item) => {
+      // Supabase types joined rows as arrays when no generated types exist
+      const challenge = Array.isArray(item.challenge)
+        ? item.challenge[0]
+        : item.challenge;
+
+      if (!challenge) return null;
+
+      return {
+        id: item.id,
+        challenge_id: challenge.id,
+        name: challenge.name,
+        description: challenge.description,
+        badge_name: challenge.badge_name,
+        badge_description: challenge.badge_description,
+        completed_at: item.completed_at,
+      };
+    })
+    .filter((item): item is Achievement => item !== null);
 
   return (
     <main className="min-h-screen bg-[#031429] px-4 py-8 text-white sm:px-6 lg:px-10">
@@ -189,7 +199,7 @@ export default async function AchievementsPage() {
                   )}
 
                   <Link
-                    href={`/challenges/${achievement.id}`}
+                    href={`/challenges/${achievement.challenge_id}`}
                     className="mt-5 inline-flex text-sm font-semibold text-cyan-400 hover:text-cyan-300"
                   >
                     View challenge →

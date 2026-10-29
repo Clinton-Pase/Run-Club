@@ -11,7 +11,7 @@ export default function ChallengeNavigation() {
 
   return (
     <header className="relative flex items-center justify-between gap-4">
-      <Link
+      <Link 
         href="/challenges"
         className="text-sm font-semibold text-gray-50 hover:underline"
         onClick={closeMenu}
@@ -39,7 +39,7 @@ export default function ChallengeNavigation() {
         <Link href="/achievements" className="text-zinc-300 hover:text-green-400">
           Achievements
         </Link>
-        <Link href="/events" className="text-zinc-300 hover:text-green-400">
+        <Link   href="https://alx.ng/calendar" className="text-zinc-300 hover:text-green-400">
           Events
         </Link>
       </nav>
@@ -60,12 +60,13 @@ export default function ChallengeNavigation() {
         <div className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-2xl border border-white/10 bg-[#031429] shadow-2xl md:hidden">
           <nav className="flex flex-col p-2">
             {[
+                { href: "/dashboard", label: "Dashboard" },
                  { href: "/profile", label: "Profile" },
               { href: "/challenges", label: "Challenges" },
               { href: "/progress", label: "My Progress" },
               { href: "/leaderboard", label: "Leaderboard" },
               { href: "/achievements", label: "Achievements" },
-              { href: "/events", label: "Events" },
+              { href: "https://alx.ng/calendar", label: "Events" },
             ].map((item) => (
               <Link
                 key={item.href}

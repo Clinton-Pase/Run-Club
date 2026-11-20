@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChallengeNavigation from "@/app/components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";
 
 type Achievement = {
   id: string;
@@ -71,7 +72,7 @@ export default async function AchievementsPage() {
     .filter((item): item is Achievement => item !== null);
 
   return (
-    <main className="min-h-screen bg-[#031429] px-4 py-8 text-white sm:px-6 lg:px-10">
+    <main className="relative min-h-screen bg-[#031429] px-4 py-8 pb-32 text-white sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10">
          <ChallengeNavigation/>
@@ -210,6 +211,11 @@ export default async function AchievementsPage() {
           )}
         </section>
       </div>
+
+      <div className="absolute bottom-0 left-0 w-full min-w-0 overflow-hidden">
+        <RunClubMarquee />
+      </div>
+
     </main>
   );
 }

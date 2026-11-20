@@ -1,24 +1,18 @@
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChallengeNavigation from "../components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";
 
-type Participant = {
+type LeaderboardRunner = {
     user_id: string;
-    joined_at: string;
-};
-
-type Profile = {
-    id: string;
-    full_name: string | null;
+    full_name: string;
     avatar_url: string | null;
-};
-
-type Activity = {
-    user_id: string;
-    challenge_id: string;
-    distance_km: number | null;
-    activity_date: string | null;
+    total_distance: number;
+    run_days: number;
+    score: number;
+    rank_position: number;
 };
 
 export default async function LeaderboardPage() {
@@ -35,7 +29,6 @@ export default async function LeaderboardPage() {
         redirect("/login");
     }
 
-    // Get the active challenge
     const { data: challenge, error: challengeError } =
         await supabase
             .from("challenges")
@@ -52,18 +45,31 @@ export default async function LeaderboardPage() {
             "Leaderboard challenge error:",
             challengeError.message
         );
+
+        return (
+            <main className="min-h-screen bg-[#031429] px-4 py-10 text-white">
+                <div className="mx-auto max-w-5xl">
+                    <ChallengeNavigation />
+
+                    <div className="mt-10 rounded-2xl border border-red-400/20 bg-red-400/10 p-8 text-center">
+                        <h1 className="text-xl font-bold">
+                            Unable to load challenge
+                        </h1>
+
+                        <p className="mt-3 text-zinc-300">
+                            Please try again later.
+                        </p>
+                    </div>
+                </div>
+            </main>
+        );
     }
 
     if (!challenge) {
         return (
             <main className="min-h-screen bg-[#031429] px-4 py-10 text-white sm:px-10">
                 <div className="mx-auto max-w-5xl">
-                    <Link
-                        href="/dashboard"
-                        className="text-sm text-zinc-400 hover:text-white"
-                    >
-                        ← Dashboard
-                    </Link>
+                    <ChallengeNavigation />
 
                     <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center">
                         <h1 className="text-2xl font-bold">
@@ -73,128 +79,59 @@ export default async function LeaderboardPage() {
                         <p className="mt-3 text-zinc-400">
                             There is currently no active challenge to rank.
                         </p>
+
+                        <Link
+                            href="/dashboard"
+                            className="mt-5 inline-block text-sm text-green-400 hover:text-green-300"
+                        >
+                            ← Back to dashboard
+                        </Link>
                     </div>
                 </div>
             </main>
         );
     }
 
-    // Get everyone who joined the challenge
-    const { data: participantRows, error: participantsError } =
-        await supabase
-            .from("challenge_participants")
-            .select("user_id, joined_at")
-            .eq("challenge_id", challenge.id);
-
-    if (participantsError) {
-        console.error(
-            "Leaderboard participants error:",
-            participantsError.message
-        );
-    }
-
-    const participants = (participantRows ?? []) as Participant[];
-
-    // Get their profiles
-    const participantIds = participants.map(
-        (participant) => participant.user_id
-    );
-
-    const { data: profileRows, error: profilesError } =
-        await supabase
-            .from("profiles")
-            .select("id, full_name, avatar_url")
-            .in("id", participantIds);
-
-    if (profilesError) {
-        console.error(
-            "Leaderboard profiles error:",
-            profilesError.message
-        );
-    }
-
-    const profiles = (profileRows ?? []) as Profile[];
-
-    // Get activities for this challenge
-    const { data: activityRows, error: activitiesError } =
-        await supabase
-            .from("challenge_activities")
-            .select(
-                "user_id, challenge_id, distance_km, activity_date"
-            )
-            .eq("challenge_id", challenge.id);
-
-    if (activitiesError) {
-        console.error(
-            "Leaderboard activities error:",
-            activitiesError.message
-        );
-    }
-
-    const activities = (activityRows ?? []) as Activity[];
-
-    // Calculate each participant's score
-    const scores = new Map<
-        string,
-        {
-            distance: number;
-            runDays: Set<string>;
-        }
-    >();
-
-    for (const participant of participants) {
-        scores.set(participant.user_id, {
-            distance: 0,
-            runDays: new Set(),
-        });
-    }
-
-    for (const activity of activities) {
-        const current = scores.get(activity.user_id);
-
-        if (!current) continue;
-
-        current.distance += Number(activity.distance_km ?? 0);
-
-        if (activity.activity_date) {
-            current.runDays.add(activity.activity_date);
-        }
-    }
+    const isDistanceChallenge =
+        challenge.scoring_method === "total_distance";
 
     const isRunDayChallenge =
-        challenge.scoring_method === "run_days" ||
-        challenge.target_unit.toLowerCase() === "run days";
+        challenge.scoring_method === "run_days";
 
-    const leaderboard = participants
-        .map((participant) => {
-            const profile = profiles.find(
-                (item) => item.id === participant.user_id
+    const isSupportedChallenge =
+        isDistanceChallenge || isRunDayChallenge;
+
+    let leaderboard: LeaderboardRunner[] = [];
+    let leaderboardError: string | null = null;
+
+    if (isSupportedChallenge) {
+        const {
+            data: leaderboardData,
+            error: leaderboardRpcError,
+        } = await supabase.rpc(
+            "get_challenge_leaderboard",
+            {
+                target_challenge_id: challenge.id,
+            }
+        );
+
+        if (leaderboardRpcError) {
+            console.error(
+                "Leaderboard RPC error:",
+                leaderboardRpcError.message
             );
 
-            const score = scores.get(participant.user_id);
-
-            const distance = score?.distance ?? 0;
-            const runDays = score?.runDays.size ?? 0;
-
-            return {
-                userId: participant.user_id,
-                name:
-                    profile?.full_name ||
-                    "Runner",
-                avatarUrl: profile?.avatar_url ?? null,
-                distance,
-                runDays,
-                score: isRunDayChallenge
-                    ? runDays
-                    : distance,
-            };
-        })
-        .sort((a, b) => b.score - a.score);
+            leaderboardError = leaderboardRpcError.message;
+        } else {
+            leaderboard = (
+                leaderboardData ?? []
+            ) as unknown as LeaderboardRunner[];
+        }
+    }
 
     return (
-        <main className="min-h-screen bg-[#031429] px-4 py-8 text-white sm:px-10">
+        <main className="relative min-h-screen bg-[#031429] px-4 py-8 pb-32 text-white sm:px-6 lg:px-10">
             <div className="mx-auto max-w-5xl">
-
                 <ChallengeNavigation />
 
                 <h1 className="mt-2 text-4xl font-bold">
@@ -205,107 +142,154 @@ export default async function LeaderboardPage() {
                     See how everyone is progressing in the current challenge.
                 </p>
 
-            <section className="mt-8 rounded-3xl border border-white/10 bg-white p-6 sm:p-8">
+                <section className="mt-8 rounded-3xl border border-white/10 bg-white p-6 sm:p-8">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                        <div>
+                            <h2 className="text-2xl font-bold text-[#031429]">
+                                {challenge.name}
+                            </h2>
 
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <h2 className="text-2xl font-bold text-[#031429]">
-                            {challenge.name}
-                        </h2>
-
-                        <p className="mt-2 text-sm text-[#031429]">
-                            Target: {challenge.target_value}{" "}
-                            {challenge.target_unit}
-                        </p>
-                    </div>
-
-                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-green-500">
-                        {challenge.status}
-                    </span>
-                </div>
-
-                <div className="mt-8 space-y-3">
-
-                    {leaderboard.length === 0 ? (
-                        <div className="rounded-2xl bg-green-500 p-8 text-center">
-                            <p className="text-zinc-400">
-                                Nobody has joined this challenge yet.
+                            <p className="mt-2 text-sm text-[#031429]">
+                                Target: {challenge.target_value}{" "}
+                                {challenge.target_unit}
                             </p>
                         </div>
-                    ) : (
-                        leaderboard.map((runner, index) => {
-                            const position = index + 1;
-                            const isCurrentUser =
-                                runner.userId === userId;
 
-                            return (
-                                <div
-                                    key={runner.userId}
-                                    className={`flex items-center gap-4 rounded-2xl border p-4 ${isCurrentUser
-                                            ? "border-zinc-500/40 bg-zinc-900"
-                                            : "border-white/10 bg-white/5"
+                        <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-green-600">
+                            {challenge.status}
+                        </span>
+                    </div>
+
+                    <div className="mt-8 space-y-3">
+                        {!isSupportedChallenge ? (
+                            <div className="rounded-2xl bg-amber-50 p-8 text-center">
+                                <p className="font-semibold text-amber-800">
+                                    Leaderboard scoring unavailable
+                                </p>
+
+                                <p className="mt-2 text-sm text-amber-700">
+                                    This challenge uses a scoring method that
+                                    has not been implemented yet.
+                                </p>
+                            </div>
+                        ) : leaderboardError ? (
+                            <div className="rounded-2xl bg-red-50 p-8 text-center">
+                                <p className="font-semibold text-red-800">
+                                    Leaderboard unavailable
+                                </p>
+
+                                <p className="mt-2 text-sm text-red-700">
+                                    Please try again later. If the problem
+                                    persists, contact an administrator.
+                                </p>
+                            </div>
+                        ) : leaderboard.length === 0 ? (
+                            <div className="rounded-2xl bg-[#031429] p-8 text-center">
+                                <p className="text-zinc-300">
+                                    Nobody has joined this challenge yet.
+                                </p>
+                            </div>
+                        ) : (
+                            leaderboard.map((runner) => {
+                                const isCurrentUser =
+                                    runner.user_id === userId;
+
+                                const distance = Number(
+                                    runner.total_distance ?? 0
+                                );
+
+                                const runDays = Number(
+                                    runner.run_days ?? 0
+                                );
+
+                                return (
+                                    <div
+                                        key={runner.user_id}
+                                        className={`flex items-center gap-4 rounded-2xl border p-4 ${
+                                            isCurrentUser
+                                                ? "border-zinc-500/40 bg-zinc-900"
+                                                : "border-white/10 bg-[#031429]"
                                         }`}
-                                >
-                                    <div className="flex h-10 text-[#031429] w-10 shrink-0 items-center justify-center rounded-full bg-white font-bold">
-                                        {position}
-                                    </div>
+                                    >
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#031429]">
+                                            {runner.rank_position}
+                                        </div>
 
-                                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                                            {runner.avatar_url ? (
+                                                <img
+                                                    src={runner.avatar_url}
+                                                    alt=""
+                                                    className="h-10 w-10 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 font-bold">
+                                                    {runner.full_name
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+                                            )}
 
-                                        {runner.avatarUrl ? (
-                                            <img
-                                                src={runner.avatarUrl}
-                                                alt=""
-                                                className="h-10 w-10 rounded-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 font-bold">
-                                                {runner.name
-                                                    .charAt(0)
-                                                    .toUpperCase()}
+                                            <div className="min-w-0">
+                                                <p className="truncate font-semibold">
+                                                    {runner.full_name}
+
+                                                    {isCurrentUser && (
+                                                        <span className="ml-2 text-xs text-green-500">
+                                                            You
+                                                        </span>
+                                                    )}
+                                                </p>
+
+                                                <p className="text-xs text-green-50">
+                                                    {isRunDayChallenge
+                                                        ? `${runDays} run days`
+                                                        : `${distance.toFixed(1)} km`}
+                                                </p>
                                             </div>
-                                        )}
+                                        </div>
 
-                                        <div className="min-w-0">
-                                            <p className="truncate font-semibold">
-                                                {runner.name}
-                                                {isCurrentUser && (
-                                                    <span className="ml-2 text-xs text-green-500">
-                                                        You
-                                                    </span>
-                                                )}
+                                        <div className="text-right">
+                                            <p className="text-lg font-bold">
+                                                {isRunDayChallenge
+                                                    ? runDays
+                                                    : distance.toFixed(1)}
                                             </p>
 
-                                            <p className="text-xs text-green-50">
+                                            <p className="text-xs text-green-500">
                                                 {isRunDayChallenge
-                                                    ? `${runner.runDays} run days`
-                                                    : `${runner.distance.toFixed(1)} km`}
+                                                    ? "days"
+                                                    : "km"}
                                             </p>
                                         </div>
                                     </div>
+                                );
+                            })
+                        )}
+                    </div>
+                </section>
+            </div>
 
-                                    <div className="text-right">
-                                        <p className="text-lg font-bold">
-                                            {isRunDayChallenge
-                                                ? runner.runDays
-                                                : runner.distance.toFixed(1)}
-                                        </p>
-
-                                        <p className="text-xs text-green-500">
-                                            {isRunDayChallenge
-                                                ? "days"
-                                                : "km"}
-                                        </p>
-                                    </div>
-                                </div>
-                            );
-                        })
-                    )}
-
-                </div>
-            </section>
-        </div>
-    </main >
-    
-  );
+            <div className="absolute bottom-0 left-0 w-full min-w-0 overflow-hidden">
+                <RunClubMarquee />
+            </div>
+        </main>
+    );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

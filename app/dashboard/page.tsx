@@ -21,7 +21,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, avatar_url, created_at")
+  .select("full_name, avatar_url, created_at, is_admin")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -31,6 +31,8 @@ export default async function DashboardPage() {
     user.user_metadata?.name?.trim() ||
     user.email?.split("@")[0] ||
     "Runner";
+
+    const isAdmin = profile?.is_admin === true;
 
   async function signOut() {
     "use server";
@@ -62,6 +64,7 @@ export default async function DashboardPage() {
           >
             Dashboard
           </Link>
+
 
           <Link
             href="/challenges"
@@ -245,6 +248,15 @@ export default async function DashboardPage() {
         <RunClubMarquee />
       </div>
 
+{isAdmin && (
+  <Link
+    href="/admin"
+    className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-red-700 px-5 py-3 text-sm font-bold shadow-xl transition hover:-translate-y-1 hover:bg-orange-50  hover:text-[#031429]"
+  >
+    <span>Admin Dashboard</span>
+    <span>↗</span>
+  </Link>
+)}
 
     </main>
   );

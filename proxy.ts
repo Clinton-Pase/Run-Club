@@ -43,15 +43,12 @@ const claims = error ? null : data?.claims;
     return NextResponse.redirect(url);
   }
 
-  if (
-    isAuthenticated &&
-    (path === "/login" || path === "/signup")
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    url.search = "";
-    return NextResponse.redirect(url);
-  }
+if (isAuthenticated && path === "/login") {
+  const url = request.nextUrl.clone();
+  url.pathname = "/dashboard";
+  url.search = "";
+  return NextResponse.redirect(url);
+}
 
   return response;
 }

@@ -60,15 +60,15 @@ export default async function LogActivityPage({
   if (!participation) {
     redirect(`/challenges/${challenge.id}`);
   }
-const unit = (challenge.target_unit ?? "").trim().toLowerCase();
 
-const supportsDistance =
-  unit === "km" ||
-  unit === "kilometer" ||
-  unit === "kilometers";
+const isDistanceChallenge =
+  challenge.scoring_method === "total_distance";
 
 const isRunDaysChallenge =
   challenge.scoring_method === "run_days";
+
+const supportsActivityLogging =
+  isDistanceChallenge || isRunDaysChallenge;
 
   async function logActivity(formData: FormData) {
     "use server";
@@ -116,19 +116,16 @@ const isRunDaysChallenge =
       throw new Error("Challenge not found.");
     }
 
-  const currentUnit = (
-  currentChallenge.target_unit ?? ""
-).trim().toLowerCase();
-
-const supportsDistance =
-  currentUnit === "km" ||
-  currentUnit === "kilometer" ||
-  currentUnit === "kilometers";
+const isDistanceChallenge =
+  currentChallenge.scoring_method === "total_distance";
 
 const isRunDaysChallenge =
   currentChallenge.scoring_method === "run_days";
 
-if (!supportsDistance && !isRunDaysChallenge) {
+const supportsActivityLogging =
+  isDistanceChallenge || isRunDaysChallenge;
+
+if (!supportsActivityLogging) {
   throw new Error(
     "Activity logging is not supported for this challenge."
   );
@@ -190,7 +187,7 @@ if (!supportsDistance && !isRunDaysChallenge) {
             {challenge.name}
           </h1>
 
-          {supportsDistance || isRunDaysChallenge ? (
+         {supportsActivityLogging ? (
             <>
               <p className="mt-2 text-sm text-[#031429]">
                 {isRunDaysChallenge

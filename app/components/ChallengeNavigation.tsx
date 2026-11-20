@@ -12,7 +12,7 @@ export default function ChallengeNavigation() {
   return (
     <header className="relative flex items-center justify-between gap-4">
       <Link 
-        href="/challenges"
+        href="/dashboard"
         className="text-sm font-semibold text-gray-50 hover:underline"
         onClick={closeMenu}
       >

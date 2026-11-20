@@ -55,82 +55,51 @@ export default async function ChallengePage({
         console.error("Participation lookup error:", participationError);
     }
 
-    const unit = (challenge.target_unit ?? "").trim().toLowerCase();
 
-    const supportsDistance =
-        unit === "km" ||
-        unit === "kilometer" ||
-        unit === "kilometers";
+ const isDistanceChallenge =
+    challenge.scoring_method === "total_distance";
+
+const isRunDaysChallenge =
+    challenge.scoring_method === "run_days";
 
 let totalDistance = 0;
 let totalRunDays = 0;
 
-if (participation) {
-    if (supportsDistance) {
-        const { data: activities, error: activitiesError } =
-            await supabase
-                .from("challenge_activities")
-                .select("distance_km")
-                .eq("challenge_id", challenge.id)
-                .eq("user_id", claims.sub);
-
-        if (activitiesError) {
-            console.error("Activity lookup error:", activitiesError);
-        } else {
-            totalDistance = (activities ?? []).reduce(
-                (total, activity) =>
-                    total + Number(activity.distance_km),
-                0
-            );
-        }
-    }
-
-    let totalRunDays = 0;
-
-if (participation && challenge.scoring_method === "run_days") {
+if (participation && (isDistanceChallenge || isRunDaysChallenge)) {
     const { data: activities, error: activitiesError } =
         await supabase
             .from("challenge_activities")
-            .select("activity_date")
+            .select("distance_km, activity_date")
             .eq("challenge_id", challenge.id)
             .eq("user_id", claims.sub);
 
     if (activitiesError) {
-        console.error("Run days lookup error:", activitiesError);
+        console.error("Activity lookup error:", activitiesError);
     } else {
-        totalRunDays = new Set(
-            (activities ?? []).map((activity) => activity.activity_date)
-        ).size;
-    }
-}
+        if (isDistanceChallenge) {
+            totalDistance = (activities ?? []).reduce(
+                (total, activity) =>
+                    total + Number(activity.distance_km ?? 0),
+                0
+            );
+        }
 
-    if (challenge.scoring_method === "run_days") {
-        const { data: activities, error: activitiesError } =
-            await supabase
-                .from("challenge_activities")
-                .select("activity_date")
-                .eq("challenge_id", challenge.id)
-                .eq("user_id", claims.sub);
-
-        if (activitiesError) {
-            console.error("Run days lookup error:", activitiesError);
-        } else {
-            const uniqueRunDays = new Set(
+        if (isRunDaysChallenge) {
+            totalRunDays = new Set(
                 (activities ?? []).map(
                     (activity) => activity.activity_date
                 )
-            );
-
-            totalRunDays = uniqueRunDays.size;
+            ).size;
         }
     }
 }
    const target = Number(challenge.target_value ?? 0);
 
-const progressValue =
-    challenge.scoring_method === "run_days"
-        ? totalRunDays
-        : totalDistance;
+const progressValue = isRunDaysChallenge
+    ? totalRunDays
+    : isDistanceChallenge
+        ? totalDistance
+        : 0;
 
 const progressPercentage =
     target > 0
@@ -214,7 +183,7 @@ const progressPercentage =
                                 {new Date(participation.joined_at).toLocaleDateString("en-NG")}.
                             </p>
 
-                     {supportsDistance || challenge.scoring_method === "run_days" ? (
+                     {isDistanceChallenge || challenge.scoring_method === "run_days" ? (
                                 <div className="mt-6">
                                     <div className="flex items-center justify-between gap-4 text-sm">
                                         <span className="text-zinc-50">Your progress</span>

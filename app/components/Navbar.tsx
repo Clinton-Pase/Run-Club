@@ -79,13 +79,13 @@ export default function Navbar() {
               </a>
             ))}
 
-            <a
-              href="#join"
-              onClick={() => setIsOpen(false)}
-              className="mt-2 rounded-xl bg-black px-4 py-3 text-center text-sm font-bold text-white"
-            >
-              Join Us
-            </a>
+       <Link
+  href="/signup"
+  onClick={() => setIsOpen(false)}
+  className="mt-2 rounded-xl bg-black px-4 py-3 text-center text-sm font-bold text-white"
+>
+  Sign up
+</Link>
           </div>
         </div>
       )}

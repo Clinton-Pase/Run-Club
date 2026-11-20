@@ -9,7 +9,7 @@ import RunClubMarquee from "./components/RunClubMarquee";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex min-h-screen flex-col w-full overflow-x-clip bg-zinc-50 font-sans dark:bg-black">
          <main>
    <Navbar />
     <Hero />
@@ -17,8 +17,13 @@ export default function Home() {
     <About />
     <Events />
     <Footer />
-    <RunClubMarquee />
     </main>
+
+
+      <div className="w-full min-w-0 overflow-hidden">
+        <RunClubMarquee />
+      </div>
+      
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import ChallengeNavigation from "@/app/components/ChallengeNavigation";
+import RunClubMarquee from "@/app/components/RunClubMarquee";
 
 type Tab = "profile" | "security" | "preferences" | "account";
 
@@ -159,7 +160,7 @@ export default function ProfileClient({
   }
 
   return (
-    <main className="min-h-screen bg-[#031429] px-4 py-6 text-white sm:px-10 sm:py-10">
+ <main className="relative min-h-screen bg-[#031429] px-5 py-10 pb-34 text-white sm:px-10">
       <div className="mx-auto max-w-5xl">
 
        <ChallengeNavigation/>
@@ -638,6 +639,11 @@ export default function ProfileClient({
           </div>
         </section>
       </div>
+
+        <div className="absolute bottom-0 left-0 w-full min-w-0 overflow-hidden">
+        <RunClubMarquee />
+      </div>
+
     </main>
   );
 }

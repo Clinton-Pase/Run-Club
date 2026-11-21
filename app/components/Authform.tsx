@@ -143,31 +143,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     return "Authentication failed. Please try again.";
   }
 
-  async function signInWithGoogle() {
-    setLoading(true);
-    setMessage("");
 
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: getCallbackUrl(),
-        },
-      });
-
-      if (error) throw error;
-
-      if (data.url) {
-        window.location.assign(data.url);
-      } else {
-        setMessage("Google sign-in could not be started. Please try again.");
-        setLoading(false);
-      }
-    } catch (error) {
-      setMessage(getAuthErrorMessage(error));
-      setLoading(false);
-    }
-  }
 
   async function submitEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -256,25 +232,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
             : "Sign in to access your running community."}
         </p>
 
-        <div className="mt-7 grid gap-3">
-          <button
-            type="button"
-            onClick={signInWithGoogle}
-            disabled={loading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#031429] px-4 py-3 font-semibold text-gray-50 hover:bg-zinc-950 disabled:opacity-60"
-          >
-            <span className="text-lg font-bold">G</span>
-            Continue with Google
-          </button>
-        </div>
 
-        <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/10" />
-          <span className="text-xs uppercase text-zinc-950">
-            Or continue with email
-          </span>
-          <div className="h-px flex-1 bg-white/10" />
-        </div>
+     <div className="my-6 flex items-center gap-3">
+  <div className="h-px flex-1 bg-gray-300" />
+  <span className="text-xs uppercase text-zinc-950">
+    Continue with email
+  </span>
+  <div className="h-px flex-1 bg-gray-300" />
+</div>
 
         <form onSubmit={submitEmail} className="space-y-4">
           {isSignup && (

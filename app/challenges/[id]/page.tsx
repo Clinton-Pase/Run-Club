@@ -31,31 +31,31 @@ export default async function ChallengePage({
         redirect("/login");
     }
 
-    const { data: challenge, error } = await supabase
-        .from("challenges")
-        .select(
-            "id, name, description, challenge_type, target_value, target_unit, scoring_method, start_date, end_date, status, badge_name, badge_description"
-        )
-      .eq("id", id)
-.eq("status", "active")
-.maybeSingle();
 
-    if (error || !challenge) {
-        notFound();
-    }
+const { data: challenge, error } = await supabase
+    .from("challenges")
+    .select(
+        "id, name, description, challenge_type, target_value, target_unit, scoring_method, start_date, end_date, status, badge_name, badge_description"
+    )
+    .eq("id", id)
+    .eq("status", "active")
+    .maybeSingle();
 
-    const { data: participation, error: participationError } =
-        await supabase
-            .from("challenge_participants")
-            .select("id, joined_at, completed_at")
-            .eq("challenge_id", challenge.id)
-            .eq("id", id)
-.in("status", ["upcoming", "active", "completed"])
-.maybeSingle();
+if (error || !challenge) {
+    notFound();
+}
 
-    if (participationError) {
-        console.error("Participation lookup error:", participationError);
-    }
+const { data: participation, error: participationError } =
+    await supabase
+        .from("challenge_participants")
+        .select("id, joined_at, completed_at")
+        .eq("challenge_id", challenge.id)
+        .eq("user_id", claims.sub)
+        .maybeSingle();
+
+if (participationError) {
+    console.error("Participation lookup error:", participationError);
+}
 
 
  const isDistanceChallenge =

@@ -33,7 +33,7 @@ export async function publishChallenge(challengeId: string) {
   const { data, error } = await supabase
     .from("challenges")
     .update({
-      status: "upcoming",
+      status: "active",
     })
     .eq("id", challengeId)
     .select("id, status")
